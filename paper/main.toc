@@ -1,14 +1,14 @@
 \contentsline {section}{\numberline {1}Introduction}{1}{section.1}%
 \contentsline {section}{\numberline {2}Preliminaries}{1}{section.2}%
 \contentsline {subsection}{\numberline {2.1}Basic Definitions}{2}{subsection.2.1}%
-\contentsline {subsection}{\numberline {2.2}Examples}{2}{subsection.2.2}%
-\contentsline {section}{\numberline {3}Motivation}{2}{section.3}%
-\contentsline {section}{\numberline {4}The Stiefel Manifold}{2}{section.4}%
-\contentsline {section}{\numberline {5}The Grassmann Manifold}{2}{section.5}%
-\contentsline {section}{\numberline {6}From Stiefel to Grassmann}{2}{section.6}%
-\contentsline {section}{\numberline {7}Worked Example: $\mathrm {Gr}(2,4)$}{3}{section.7}%
-\contentsline {subsection}{\numberline {7.1}First Application}{3}{subsection.7.1}%
-\contentsline {subsection}{\numberline {7.2}Second Application}{3}{subsection.7.2}%
-\contentsline {section}{\numberline {8}Discussion}{3}{section.8}%
-\contentsline {section}{\numberline {9}Further Directions}{3}{section.9}%
-\contentsline {section}{\numberline {10}Conclusion}{3}{section.10}%
+\contentsline {subsection}{\numberline {2.2}Examples}{3}{subsection.2.2}%
+\contentsline {section}{\numberline {3}Motivation}{3}{section.3}%
+\contentsline {section}{\numberline {4}The Stiefel Manifold}{3}{section.4}%
+\contentsline {section}{\numberline {5}The Grassmann Manifold}{3}{section.5}%
+\contentsline {section}{\numberline {6}From Stiefel to Grassmann}{3}{section.6}%
+\contentsline {section}{\numberline {7}Worked Example: $\mathrm {Gr}(2,4)$}{4}{section.7}%
+\contentsline {subsection}{\numberline {7.1}First Application}{4}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Second Application}{4}{subsection.7.2}%
+\contentsline {section}{\numberline {8}Discussion}{4}{section.8}%
+\contentsline {section}{\numberline {9}Further Directions}{4}{section.9}%
+\contentsline {section}{\numberline {10}Conclusion}{4}{section.10}%

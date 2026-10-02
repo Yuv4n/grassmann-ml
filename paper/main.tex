@@ -41,7 +41,7 @@
   linkcolor=blue!50!black,
   citecolor=green!40!black,
   urlcolor=blue!60!black,
-  pdftitle={Stiefel and Grassmann Manifolds},
+  pdftitle={Stiefel and Grassmann Manifolds: A Geometric Foundation for Orthogonality and Subspace Problems in Machine Learning},
   pdfauthor={Yuvan Marimuthu}
 }
 
@@ -96,7 +96,7 @@
 % --------------------------------------------------
 % Title information
 % --------------------------------------------------
-\title{\textbf{Stiefel and Grassmann Manifolds}}
+\title{\textbf{Stiefel and Grassmann Manifolds: A Geometric Foundation for Orthogonality and Subspace Problems in Machine Learning}}
 \author{Yuvan Marimuthu}
 \date{\today}
 
@@ -135,12 +135,79 @@ We follow the conventions of \cite{segal} and \cite{boumal}.
 
 \subsection{Basic Definitions}
 
-\begin{definition}
-% Write your first key definition here.
+\begin{definition}[Co-ordinate Chart]
+  Let \( X \) be a topological space. A \textbf{Co-ordinate Chart} on \( X \) is the pair \( (U, \varphi)\) where \( U \subset X \) is an open set, such that there exists a homeomorphism 
+  \[
+    \varphi: U \xlongrightarrow{\sim} \varphi(U) \subset \R^n
+  \]
+  for some natural number \( n \in \mathbb{N} \).
 \end{definition}
 
-\begin{definition}
-% Write another important definition here.
+\begin{definition}[Topological Manifold]
+  Let \( X \) be a topological space, and fix a natural number \(n \in \mathbb{N} \). \( X\) is an \textbf{n-dimensional topological manifold} if and only if for any point \( x \in X \), there exists a co-ordinate chart where,
+  \[
+    \varphi: U \xlongrightarrow{\sim} \varphi(U) \subset \R^n
+  \]
+  where \( x \in U \)
+
+  This is to say, that \( X \) is locally Euclidean, i.e. \( X \) is homeomorphic to \( R^n \).
+
+  Furthermore, we require that \( X \) is Hausdorff, and second countable, as to exclude certain pathalogical examples.
+\end{definition}
+
+\begin{definition}[Transition Function]
+  Let \( X \) be a topological manifold, and let \( (U, \varphi_1) \) and \( (V, \varphi_2) \) be two co-ordinate charts on \( X \). The \textbf{transition function} between these two co-ordinate charts is the function:
+  \[
+    \phi_{21} = \varphi_2 \circ \varphi_1^{-1} : \varphi_1(U \cap V) \xlongrightarrow{\sim} \varphi_2(U \cap V) 
+  \]
+  Notice, it is automatically a homeomorphism, as it is the composition of two homeomorphisms.
+  \\
+  \\
+  Its inverse is the transition function in the opposite direction:
+  \[
+    \phi_{21}^{-1} = \phi_{12} = \varphi_1 \circ \varphi_2^{-1} : \varphi_2(U \cap V) \xlongrightarrow{\sim} \varphi_1(U \cap V)
+  \]
+ \end{definition}
+
+\begin{definition}[Smooth Atlas]
+  Let \( X \) be a topological manifold. An \textbf{atlas} on \( X \) is a collection of co-ordinate charts on \( X \):
+  \[
+    \varphi_i : U_i \xlongrightarrow{\sim} \widetilde{U}_i \subset \R^n
+  \]
+  indexed by some, possibly infinite, set \( I \), such that:
+  \[
+  \bigcup_{i \in I}U_i = X    
+  \]
+  
+  An atlas is a \textbf{smooth atlas} if and only if for any two co-ordinate charts in the atlas, the transition function
+  \[
+    \phi_{ij} = \varphi_j \circ \varphi_i^{-1} : \varphi_i(U_i \cap U_j) \xlongrightarrow{\sim} \varphi_j(U_i \cap U_j), \qquad i,j \in I
+  \]
+  is a smooth function, i.e. it is infinitely differentiable.
+\end{definition}
+
+\begin{definition}[Compatible smooth atlases]
+  \label{def:compatible-atlases}
+  Let \( X \) be a topological manifold, and let
+  \[
+    \mathcal{A} = \{(U_i, \varphi_i); i \in I\}
+  \]
+  be a smooth atlas on \( X \). Let \( (U, \varphi) \) be any coordinate chart on \( X \). The chart \( (U, \varphi) \) is \textbf{compatible} with the atlas \( \mathcal{A} \) if and only if the transition functions between \( (U, \varphi) \) and any chart in \( \mathcal{A} \) are diffeomorphisms, i.e. they are smooth functions with smooth inverses.
+
+  In other words, the new chart \( (U, \varphi) \) is compatible with the atlas \( \mathcal{A} \) if and only if the union \( \mathcal{A} \cup \{(U, \varphi)\} \) is still a smooth atlas.
+  \smallskip
+  \noindent
+  Let \( \mathcal{A}, \mathcal{B} \) be smooth atlases on \( X \). The atlases \( \mathcal{A} \) and \( \mathcal{B} \) are \textbf{compatible} if and only if every chart in \( \mathcal{A} \) is compatible with \( \mathcal{B} \), and vice versa.
+\end{definition}
+
+\begin{corollary}
+  Compatibility is an equivalence relation on smooth atlases. [Segal, Corollary 2.20].
+\end{corollary}
+
+\begin{definition}[Smooth structure and smooth manifold]
+  \label{def:smooth-manifold}
+  % A smooth structure is an equivalence class of compatible
+  % smooth atlases. A smooth manifold is X with such a structure.
 \end{definition}
 
 \subsection{Examples}
