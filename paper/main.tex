@@ -214,6 +214,30 @@ We follow the conventions of \cite{segal} and \cite{boumal}.
   The equivalence classes of compatible smooth atlases are referred to as a \textbf{smooth structure} on \( X \).  
 \end{definition}
 
+\begin{definition}
+  Let \( X, Y \) be smooth manifolds, of dimension \( m \) and \( n \) respectively, and let 
+  \[
+    H: X \longrightarrow Y
+  \]
+  be a continuous function. Fix a point \( x \in X \). H is \textbf{smooth at \( x \)} if and only if there exists a chart \( (U, \varphi) \) on \( X \) containing \( x \), and a chart \( (V, \psi) \) on \( Y \) containing all of \( H(U) \), such that the composition
+  \[
+    \psi \circ H \circ \varphi^{-1} : \varphi(U) \longrightarrow \psi(V)
+  \]
+  is smooth at \( \varphi(x) \). 
+  
+  The function \( H \) is \textbf{smooth} if and only if it is smooth at every point \( x \in X \).
+\end{definition}
+
+\begin{definition}
+  Let \(X, Y \) be smooth manifolds. A function 
+  \[
+    H: X \longrightarrow Y
+  \]
+  is a \textbf{diffeomorphism} if and only if \( H \) is a bijection, and both \( H \) and \( H^{-1} \) are smooth.
+  
+  If there exists a diffeomorphism between \( X \) and \( Y \), they are \textbf{diffeomorphic}.
+\end{definition}
+
 \subsection{Examples}
 
 \begin{example}
