@@ -135,6 +135,8 @@ We follow the conventions of \cite{segal} and \cite{boumal}.
 
 \subsection{Basic Definitions}
 
+For the definitions of smooth manifolds and smooth maps, we follow Segal \cite{segal}.
+
 \begin{definition}\label{def:coordinate-chart}
   Let \( X \) be a topological space. A \textbf{Co-ordinate Chart} on \( X \) is the pair \( (U, \varphi)\) where \( U \subset X \) is open, and \( \varphi \) is a homeomorphism 
   \[
@@ -264,6 +266,26 @@ We follow the conventions of \cite{segal} and \cite{boumal}.
 \begin{corollary}[{\cite[Corollary 2.28]{segal}}]\label{cor:pseudo-atlas-smooth-structure}
   If we further assume that each transition function \( \phi_{21} \) is smooth, then \( [\mathcal{A}] \) is a smooth structure on the topological manifold \( X \), provided the resulting topology is Hausdorff and second-countable.
 \end{corollary}
+
+For embedded submanifolds and their tangent spaces, we follow the conventions of Boumal \cite{boumal}.
+
+\begin{definition}\label{def:embedded-submanifold}
+  Let \( \mathcal{E} \) be a real vector space of dimension \( d \). A non-empty subset \( \mathcal{M} \subset \mathcal{E} \) is a \textbf{smooth embedded submanifold} of \( \mathcal{E} \) of dimension \( n \), if either
+  \begin{enumerate}
+    \item \( n = d \) and \( \mathcal{M} \) is open in \( \mathcal{E} \), also denoted as an \textbf{open submanifold}, or
+    \item \( n = d - k \) for some \( k \ge 1 \) and, for each \( x \in \mathcal{M} \), there exists a neighbourhood \( U \subset \mathcal{E} \) of \( x \) and a smooth function
+    \[
+      h: U \longrightarrow \mathbb{R}^k
+    \]
+    such that
+    \begin{enumerate}
+      \item If \( y \) is in \( U \), then \( h(y) = 0 \) if and only if \( y \in \mathcal{M} \); and
+      \item rank Dh(x) = k, where \( Dh(x) \) is the Jacobian of \( h \) at \( x \).
+    \end{enumerate}
+  \end{enumerate}
+  Such a function \( h \) is called a \textbf{local defining function} for \( \mathcal{M} \) at \( x \)
+\end{definition}
+
 
 \subsection{Examples}
 
