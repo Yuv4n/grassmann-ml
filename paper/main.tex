@@ -84,7 +84,7 @@
 \newcommand{\Rea}{\operatorname{Re}}
 \newcommand{\Ima}{\operatorname{Im}}
 
-\newcommand{\St}{V_k(\R^n)}
+\newcommand{\St}{\mathrm{St}(n, k)}
 \newcommand{\Gr}{\mathrm{Gr}(k,n)}
 \DeclareMathOperator{\sym}{sym}
 \DeclareMathOperator{\Skew}{skew}
@@ -136,21 +136,21 @@ We follow the conventions of \cite{segal} and \cite{boumal}.
 \subsection{Basic Definitions}
 
 \begin{definition}\label{def:coordinate-chart}
-  Let \( X \) be a topological space. A \textbf{Co-ordinate Chart} on \( X \) is the pair \( (U, \varphi)\) where \( U \subset X \) is open, and there exists a homeomorphism 
+  Let \( X \) be a topological space. A \textbf{Co-ordinate Chart} on \( X \) is the pair \( (U, \varphi)\) where \( U \subset X \) is open, and \( \varphi \) is a homeomorphism 
   \[
     \varphi: U \xlongrightarrow{\sim} \varphi(U)
   \]
-  where \( \varphi(U) \) is an open subset \( \varphi(U) \subset \R^n \), for some natural number \( n \in \mathbb{N} \).
+  where \( \varphi(U) \) is an open subset \( \varphi(U) \subset \R^n \), for some nonnegative integer \( n \).
 \end{definition}
 
 \begin{definition}\label{def:topological-manifold}
-  Let \( X \) be a topological space, and fix a natural number \(n \in \mathbb{N} \). \( X\) is an \textbf{n-dimensional topological manifold} if and only if \( X\) is Hausdorff and second countable, and for any point \( x \in X \), there exists a co-ordinate chart where,
+  Let \( X \) be a topological space, and fix a nonnegative integer \( n \). \( X\) is an \textbf{n-dimensional topological manifold} if and only if \( X\) is Hausdorff and second countable, and for any point \( x \in X \), there exists a co-ordinate chart,
   \[
     \varphi: U \xlongrightarrow{\sim} \varphi(U) \subset \R^n
   \]
   where \( x \in U \), and \( \varphi(U) \) is open in \( \R^n \). 
 
-  This is to say, that \( X \) is locally Euclidean, i.e. every point of \( X \) has an open neighbourhood homeomorphic to an open subset of \(\mathbb R^n\)
+  This is to say, that \( X \) is locally Euclidean, i.e. every point of \( X \) has an open neighbourhood homeomorphic to an open subset of \(\mathbb R^n\).
 
   We require that \( X \) is Hausdorff, and second countable, as to exclude certain pathological examples.
 \end{definition}
@@ -169,7 +169,7 @@ We follow the conventions of \cite{segal} and \cite{boumal}.
   \[
     \phi_{21}^{-1} = \phi_{12} = \varphi_1 \circ \varphi_2^{-1} : \varphi_2(U \cap V) \xlongrightarrow{\sim} \varphi_1(U \cap V)
   \]
- \end{definition}
+\end{definition}
 
 \begin{definition}\label{def:atlas}
   Let \( X \) be a topological manifold. An \textbf{atlas} on \( X \) is a collection of co-ordinate charts on \( X \):
@@ -203,24 +203,23 @@ We follow the conventions of \cite{segal} and \cite{boumal}.
   Let \( \mathcal{A}, \mathcal{B} \) be smooth atlases on \( X \). The atlases \( \mathcal{A} \) and \( \mathcal{B} \) are \textbf{compatible} if and only if every chart in \( \mathcal{A} \) is compatible with \( \mathcal{B} \), and vice versa.
 \end{definition}
 
-\begin{corollary}
-  Compatibility is an equivalence relation on smooth atlases. [Segal, Corollary 2.20].
+\begin{corollary}[{\cite[Corollary 2.20]{segal}}]\label{cor:compatibility-equivalence}
+  Compatibility is an equivalence relation on smooth atlases.
 \end{corollary}
 
 \begin{definition}\label{def:smooth-manifold}
-  A \textbf{smooth manifold} is a topological manifold \( X \) together with an equivalence class \( [\mathcal{A}] \), of compatible smooth atlases on \( X \). 
+  A \textbf{smooth manifold} is a topological manifold \( X \) together with an equivalence class \( [\mathcal{A}] \) of compatible smooth atlases on \( X \). 
   
-  The equivalence classes of compatible smooth atlases is called a \textbf{smooth structure} on \( X \).
+  The equivalence class \( [\mathcal{A}] \) of compatible smooth atlases is called a \textbf{smooth structure} on \( X \).
 
 \end{definition}
 
 \begin{definition}\label{def:smooth-map}
-
   Let \( X, Y \) be smooth manifolds, of dimension \( m \) and \( n \) respectively, and let 
   \[
     H: X \longrightarrow Y
   \]
-  be a continuous function. Fix a point \( x \in X \). H is \textbf{smooth at \( x \)} if and only if there exists a chart \((U,\varphi)\) compatible with the smooth structure on \(X\), with \(x \in U\), and a chart \((V,\psi)\) compatible with the smooth structure on \(Y\), with \(H(U) \subset V\), such that the composition
+  be a continuous function. Fix a point \( x \in X \). \( H \) is \textbf{smooth at \( x \)} if and only if there exists a chart \((U,\varphi)\) compatible with the smooth structure on \(X\), with \(x \in U\), and a chart \((V,\psi)\) compatible with the smooth structure on \(Y\), with \(H(U) \subset V\), such that the composition
   \[
     \psi \circ H \circ \varphi^{-1} : \varphi(U) \longrightarrow \psi(V)
   \]
@@ -240,7 +239,7 @@ We follow the conventions of \cite{segal} and \cite{boumal}.
 \end{definition}
 
 \begin{definition}\label{def:pseudo-chart}
-  Let \(X\) be a set. A \textbf{pseudo-chart} on \(X\) is the pair \((U,\varphi)\), where \(U \subset X\) and
+  Following Segal, let \(X\) be a set. A \textbf{pseudo-chart} on \(X\) is the pair \((U,\varphi)\), where \(U \subset X\) and
   \[
     \varphi : U \longrightarrow \varphi{(U)}
   \]
@@ -253,7 +252,7 @@ We follow the conventions of \cite{segal} and \cite{boumal}.
   \]
 \end{definition}
 
-\begin{proposition}[{\cite[Proposition 2.26]{segal}}]
+\begin{proposition}[{\cite[Proposition 2.26]{segal}}]\label{prop:pseudo-atlas-topology}
   Let \( X \) be a set, and let \( \mathcal{A} = \{ (U_i,\varphi_i) : i \in I \} \) be a pseudo-atlas for \( X \). Suppose that for any pair \( (U_1, \varphi_1), (U_2, \varphi_2) \) of pseudo-charts in \( \mathcal{A} \), we have that:
   \begin{enumerate}
     \item both \( \varphi_1(U_1 \cap U_2) \subset \varphi_1(U_1) \) and \( \varphi_2(U_1 \cap U_2) \subset \varphi_2(U_2) \) are open subsets, and
@@ -262,7 +261,7 @@ We follow the conventions of \cite{segal} and \cite{boumal}.
   Then there exists a unique topology on \( X \) such that each pseudo-chart \( (U_i, \varphi_i) \) is a co-ordinate chart on \( X \).
 \end{proposition}
 
-\begin{corollary}[{\cite[Corollary 2.28]{segal}}]
+\begin{corollary}[{\cite[Corollary 2.28]{segal}}]\label{cor:pseudo-atlas-smooth-structure}
   If we further assume that each transition function \( \phi_{21} \) is smooth, then \( [\mathcal{A}] \) is a smooth structure on the topological manifold \( X \), provided the resulting topology is Hausdorff and second-countable.
 \end{corollary}
 
@@ -350,17 +349,17 @@ We follow the conventions of \cite{segal} and \cite{boumal}.
 % --------------------------------------------------
 % 7. Worked Example: Gr(2,4)
 % --------------------------------------------------
-\section{Worked Example: \texorpdfstring{$\mathrm{Gr}(2,4)$}{Gr(2,4)}}\label{sec:example}
+\section{Applications}\label{sec:example}
 
 % Apply the theory to a specific example.
 % For this project, this could be where you apply the construction
 % to a particular algebra or number system.
 
-\subsection{First Application}
+\subsection{\texorpdfstring{$\mathrm{Gr}(2,4)$}{Gr(2,4)} in full}
 
 % Write the first application here.
 
-\subsection{Second Application}
+\subsection{PCA on the Grassmannian}
 
 % Write another application here if needed.
 
