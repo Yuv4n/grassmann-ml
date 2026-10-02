@@ -135,15 +135,15 @@ We follow the conventions of \cite{segal} and \cite{boumal}.
 
 \subsection{Basic Definitions}
 
-\begin{definition}
-  Let \( X \) be a topological space. A \textbf{Co-ordinate Chart} on \( X \) is the pair \( (U, \varphi)\) where \( U \subset X \) is an open set, such that there exists a homeomorphism 
+\begin{definition}\label{def:coordinate-chart}
+  Let \( X \) be a topological space. A \textbf{Co-ordinate Chart} on \( X \) is the pair \( (U, \varphi)\) where \( U \subset X \) is open, and there exists a homeomorphism 
   \[
-    \varphi: U \xlongrightarrow{\sim} \varphi(U) \subset \R^n
+    \varphi: U \xlongrightarrow{\sim} \varphi(U)
   \]
-  for some natural number \( n \in \mathbb{N} \).
+  where \( \varphi(U) \) is an open subset \( \varphi(U) \subset \R^n \), for some natural number \( n \in \mathbb{N} \).
 \end{definition}
 
-\begin{definition}
+\begin{definition}\label{def:topological-manifold}
   Let \( X \) be a topological space, and fix a natural number \(n \in \mathbb{N} \). \( X\) is an \textbf{n-dimensional topological manifold} if and only if \( X\) is Hausdorff and second countable, and for any point \( x \in X \), there exists a co-ordinate chart where,
   \[
     \varphi: U \xlongrightarrow{\sim} \varphi(U) \subset \R^n
@@ -155,7 +155,7 @@ We follow the conventions of \cite{segal} and \cite{boumal}.
   We require that \( X \) is Hausdorff, and second countable, as to exclude certain pathological examples.
 \end{definition}
 
-\begin{definition}
+\begin{definition}\label{def:transition-function}
   Let \( X \) be a topological manifold, and let \( (U, \varphi_1) \) and \( (V, \varphi_2) \) be two co-ordinate charts on \( X \). The \textbf{transition function} between these two co-ordinate charts is the function:
   \[
     \phi_{21} = \varphi_2 \circ \varphi_1^{-1} : \varphi_1(U \cap V) \xlongrightarrow{\sim} \varphi_2(U \cap V) 
@@ -171,7 +171,7 @@ We follow the conventions of \cite{segal} and \cite{boumal}.
   \]
  \end{definition}
 
-\begin{definition}
+\begin{definition}\label{def:atlas}
   Let \( X \) be a topological manifold. An \textbf{atlas} on \( X \) is a collection of co-ordinate charts on \( X \):
   \[
     \varphi_i : U_i \xlongrightarrow{\sim} \widetilde{U}_i \subset \R^n
@@ -188,8 +188,7 @@ We follow the conventions of \cite{segal} and \cite{boumal}.
   is a smooth function, i.e. it is infinitely differentiable.
 \end{definition}
 
-\begin{definition}
-  \label{def:compatible-atlases}
+\begin{definition}\label{def:compatible-atlases}
   Let \( X \) be a topological manifold, and let
   \[
     \mathcal{A} = \{(U_i, \varphi_i); i \in I\}
@@ -208,18 +207,20 @@ We follow the conventions of \cite{segal} and \cite{boumal}.
   Compatibility is an equivalence relation on smooth atlases. [Segal, Corollary 2.20].
 \end{corollary}
 
-\begin{definition}
+\begin{definition}\label{def:smooth-manifold}
   A \textbf{smooth manifold} is a topological manifold \( X \) together with an equivalence class \( [\mathcal{A}] \), of compatible smooth atlases on \( X \). 
   
-  The equivalence classes of compatible smooth atlases are referred to as a \textbf{smooth structure} on \( X \).  
+  The equivalence classes of compatible smooth atlases is called a \textbf{smooth structure} on \( X \).
+
 \end{definition}
 
-\begin{definition}
+\begin{definition}\label{def:smooth-map}
+
   Let \( X, Y \) be smooth manifolds, of dimension \( m \) and \( n \) respectively, and let 
   \[
     H: X \longrightarrow Y
   \]
-  be a continuous function. Fix a point \( x \in X \). H is \textbf{smooth at \( x \)} if and only if there exists a chart \( (U, \varphi) \) on \( X \) containing \( x \), and a chart \( (V, \psi) \) on \( Y \) containing all of \( H(U) \), such that the composition
+  be a continuous function. Fix a point \( x \in X \). H is \textbf{smooth at \( x \)} if and only if there exists a chart \((U,\varphi)\) compatible with the smooth structure on \(X\), with \(x \in U\), and a chart \((V,\psi)\) compatible with the smooth structure on \(Y\), with \(H(U) \subset V\), such that the composition
   \[
     \psi \circ H \circ \varphi^{-1} : \varphi(U) \longrightarrow \psi(V)
   \]
@@ -228,15 +229,42 @@ We follow the conventions of \cite{segal} and \cite{boumal}.
   The function \( H \) is \textbf{smooth} if and only if it is smooth at every point \( x \in X \).
 \end{definition}
 
-\begin{definition}
+\begin{definition}\label{def:diffeomorphism}
   Let \(X, Y \) be smooth manifolds. A function 
   \[
     H: X \longrightarrow Y
   \]
   is a \textbf{diffeomorphism} if and only if \( H \) is a bijection, and both \( H \) and \( H^{-1} \) are smooth.
-  
+
   If there exists a diffeomorphism between \( X \) and \( Y \), they are \textbf{diffeomorphic}.
 \end{definition}
+
+\begin{definition}\label{def:pseudo-chart}
+  Let \(X\) be a set. A \textbf{pseudo-chart} on \(X\) is the pair \((U,\varphi)\), where \(U \subset X\) and
+  \[
+    \varphi : U \longrightarrow \varphi{(U)}
+  \]
+  is a bijection onto an open subset
+  \(\varphi{(U)} \subset \mathbb{R}^n\).
+
+  A collection \(\mathcal{A}=\{(U_i,\varphi_i):i\in I\}\) of pseudo-charts, with the same dimension \(n\), is called a pseudo-atlas on \(X\) if
+  \[
+    \bigcup_{i\in I} U_i = X.
+  \]
+\end{definition}
+
+\begin{proposition}[{\cite[Proposition 2.26]{segal}}]
+  Let \( X \) be a set, and let \( \mathcal{A} = \{ (U_i,\varphi_i) : i \in I \} \) be a pseudo-atlas for \( X \). Suppose that for any pair \( (U_1, \varphi_1), (U_2, \varphi_2) \) of pseudo-charts in \( \mathcal{A} \), we have that:
+  \begin{enumerate}
+    \item both \( \varphi_1(U_1 \cap U_2) \subset \varphi_1(U_1) \) and \( \varphi_2(U_1 \cap U_2) \subset \varphi_2(U_2) \) are open subsets, and
+    \item the transition function is continuous. 
+  \end{enumerate}
+  Then there exists a unique topology on \( X \) such that each pseudo-chart \( (U_i, \varphi_i) \) is a co-ordinate chart on \( X \).
+\end{proposition}
+
+\begin{corollary}[{\cite[Corollary 2.28]{segal}}]
+  If we further assume that each transition function \( \phi_{21} \) is smooth, then \( [\mathcal{A}] \) is a smooth structure on the topological manifold \( X \), provided the resulting topology is Hausdorff and second-countable.
+\end{corollary}
 
 \subsection{Examples}
 
