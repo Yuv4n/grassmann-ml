@@ -5,7 +5,7 @@
 \contentsline {section}{\numberline {3}Motivation}{3}{section.3}%
 \contentsline {section}{\numberline {4}The Stiefel Manifold}{3}{section.4}%
 \contentsline {section}{\numberline {5}The Grassmann Manifold}{3}{section.5}%
-\contentsline {section}{\numberline {6}From Stiefel to Grassmann}{3}{section.6}%
+\contentsline {section}{\numberline {6}From Stiefel to Grassmann}{4}{section.6}%
 \contentsline {section}{\numberline {7}Worked Example: $\mathrm {Gr}(2,4)$}{4}{section.7}%
 \contentsline {subsection}{\numberline {7.1}First Application}{4}{subsection.7.1}%
 \contentsline {subsection}{\numberline {7.2}Second Application}{4}{subsection.7.2}%
