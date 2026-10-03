@@ -1,0 +1,37 @@
+# macOS
+.DS_Store
+
+# Editor
+.vscode/
+
+# LaTeX build files
+*.aux
+*.log
+*.out
+*.toc
+*.bbl
+*.bcf
+*.blg
+*.run.xml
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.pdf
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# ML outputs
+results/
+checkpoints/
+*.ckpt
+*.pt
+data/
+
+# Secrets
+.env
