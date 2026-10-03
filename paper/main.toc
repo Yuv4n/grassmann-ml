@@ -2,9 +2,9 @@
 \contentsline {section}{\numberline {2}Preliminaries}{1}{section.2}%
 \contentsline {subsection}{\numberline {2.1}Basic Definitions}{2}{subsection.2.1}%
 \contentsline {subsection}{\numberline {2.2}Examples}{4}{subsection.2.2}%
-\contentsline {section}{\numberline {3}Motivation}{4}{section.3}%
-\contentsline {section}{\numberline {4}The Stiefel Manifold}{4}{section.4}%
-\contentsline {section}{\numberline {5}The Grassmann Manifold}{4}{section.5}%
+\contentsline {section}{\numberline {3}Motivation}{5}{section.3}%
+\contentsline {section}{\numberline {4}The Stiefel Manifold}{5}{section.4}%
+\contentsline {section}{\numberline {5}The Grassmann Manifold}{5}{section.5}%
 \contentsline {section}{\numberline {6}From Stiefel to Grassmann}{5}{section.6}%
 \contentsline {section}{\numberline {7}Applications}{5}{section.7}%
 \contentsline {subsection}{\numberline {7.1}$\mathrm {Gr}(2,4)$ in full}{5}{subsection.7.1}%

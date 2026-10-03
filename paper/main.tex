@@ -86,6 +86,7 @@
 
 \newcommand{\St}{\mathrm{St}(n, k)}
 \newcommand{\Gr}{\mathrm{Gr}(k,n)}
+\DeclareMathOperator{\rank}{rank}
 \DeclareMathOperator{\sym}{sym}
 \DeclareMathOperator{\Skew}{skew}
 \DeclareMathOperator{\tr}{tr}
@@ -273,18 +274,37 @@ For embedded submanifolds and their tangent spaces, we follow the conventions of
   Let \( \mathcal{E} \) be a real vector space of dimension \( d \). A non-empty subset \( \mathcal{M} \subset \mathcal{E} \) is a \textbf{smooth embedded submanifold} of \( \mathcal{E} \) of dimension \( n \), if either
   \begin{enumerate}
     \item \( n = d \) and \( \mathcal{M} \) is open in \( \mathcal{E} \), also denoted as an \textbf{open submanifold}, or
-    \item \( n = d - k \) for some \( k \ge 1 \) and, for each \( x \in \mathcal{M} \), there exists a neighbourhood \( U \subset \mathcal{E} \) of \( x \) and a smooth function
+    \item \( n = d - k \) for some \( k \ge 1 \) and, for each \( x \in \mathcal{M} \), there exists an open neighbourhood \( U \subset \mathcal{E} \) of \( x \) and a smooth function
     \[
       h: U \longrightarrow \mathbb{R}^k
     \]
     such that
     \begin{enumerate}
       \item If \( y \) is in \( U \), then \( h(y) = 0 \) if and only if \( y \in \mathcal{M} \); and
-      \item rank Dh(x) = k, where \( Dh(x) \) is the Jacobian of \( h \) at \( x \).
+      \item \( \rank{Dh(x)} = k \), where \( Dh(x) : \mathcal{E} \rightarrow \mathbb{R}^k \) is the derivative of \(h\) at \(x\).
     \end{enumerate}
   \end{enumerate}
-  Such a function \( h \) is called a \textbf{local defining function} for \( \mathcal{M} \) at \( x \)
+  Such a function \( h \) is called a \textbf{local defining function} for \( \mathcal{M} \) at \( x \).
 \end{definition}
+
+\begin{definition}\label{def:tangent-space}
+  Let \( \mathcal{M} \) be a smooth embedded submanifold of a finite-dimensional real vector space \( \mathcal{E} \). The \textbf{tangent space} to \( \mathcal{M} \) at \( x \in \mathcal{M} \) is the set
+  \[
+    T_x\mathcal{M} = \{ c'(0) \mid c:I \longrightarrow \mathcal{M} \text{ is smooth and } c(0) = x \},
+  \]
+  where \(I\) is any open interval containing \( 0 \). We regard \(c\) as a curve in \(\mathcal E\) when discussing its smoothness and derivatives.
+
+  That is, \( v \in T_x\mathcal{M} \) if and only if there exists a smooth curve on \( \mathcal{M} \) passing through \(x\) at \( t = 0 \) with velocity \( v \).
+
+  Vectors in \(T_x\mathcal{M}\) are called \textbf{tangent vectors} to \(\mathcal{M}\) at \(x\).
+\end{definition}
+
+By \cite[Theorem 3.15]{boumal}, \(T_x\mathcal{M}\) is a subspace of \(\mathcal{E}\), and
+\[
+  \dim T_x\mathcal{M} = \dim\mathcal{M},
+\]
+independently of \(x\). 
+
 
 
 \subsection{Examples}
