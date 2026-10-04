@@ -126,8 +126,10 @@
 % Mention gradients and basis-independent polar updates; do not claim convergence or numerical results.
 \end{abstract}
 
+\newpage
 \tableofcontents
 
+\newpage
 % --------------------------------------------------
 % 1. Introduction
 % --------------------------------------------------
@@ -498,82 +500,281 @@ We will also need to determine when the derivative of a smooth map is surjective
 
 \section{The Stiefel Manifold}\label{sec:stiefel}
 
-% Explain how the constraint gives a manifold with computable gradients and feasible updates.
-% Use Boumal Section 7.3 as supplementary guidance; develop the proofs here.
+We now apply the preceding results to the constraint \( X^\top X=I_k \), deriving the gradient and a retraction for optimisation.
+
 
 \begin{convention}[Matrix conventions]\label{conv:matrix-conventions}
-  % Fix 1 <= k <= n; use n-by-k matrices with column bases.
-  % Define the Frobenius inner product, Sym(k), sym(B), and the induced Stiefel metric.
+  Fix integers \( 1 \le k \le n \). Endow \( \R^{n \times k} \) with the Frobenius inner product
+  \[
+    \langle A, B \rangle = \tr(A^\top B), \qquad A, B \in \R^{n \times k}.
+  \]
+  Let \( \Sym(k) \subset \R^{k \times k} \) denote the space of symmetric \( k \times k \) matrices, and for \( B \in \R^{k \times k} \) define
+  \[
+    \sym(B) = \frac{B + B^\top}{2}.
+  \]
+  Throughout this section, the Stiefel manifold carries the Riemannian metric induced by the Frobenius inner product.
 \end{convention}
 
-\begin{definition}[Stiefel manifold]\label{def:stiefel}
-  % Define St(n,k) = {X in R^(n-by-k) : X^T X = I_k}.
+\begin{definition}\label{def:stiefel}
+  The \textbf{Stiefel manifold} \( \St \) is the set of matrices in \( \R^{n \times k} \) with orthonormal columns in \( \R^n \) with respect to the standard Euclidean inner product,
+  \[
+    \St = \{ X \in \R^{n \times k} : X^\top X = I_k \},
+  \] 
+  where \( I_k \) denotes the identity matrix of size \( k \).
+  We call matrices in \( \St \) \textbf{orthonormal matrices} and we reserve the term \textbf{orthogonal matrices} for square orthonormal matrices.
 \end{definition}
 
-\begin{theorem}[Smooth structure]\label{thm:stiefel-manifold}
-  % State the embedded manifold result and dimension nk - k(k+1)/2.
+\begin{theorem}\label{thm:stiefel-manifold}
+  The Stiefel manifold \( \St \) is an embedded submanifold of \( \R^{n \times k} \) of dimension
+  \[
+    \dim{\St} = \dim{\R^{n \times k}} - \dim{\Sym(k)} = nk - \frac{k(k+1)}{2}.
+  \]
 \end{theorem}
 
 \begin{proof}
-  % Use F(X)=X^T X with target Sym(k) and compute DF(X)[V].
-  % For a symmetric S, use V=XS/2 to prove surjectivity at X in St(n,k).
-  % Apply \cref{thm:regular-value}.
+  Following~\cite[Section 7.3]{boumal}, consider the smooth map
+  \[
+    h : \R^{n \times k} \longrightarrow \Sym(k), \qquad h(X) = X^\top X - I_k
+  \]
+  Then \( \St = h^{-1}(0) \).
+  For \( X,V \in \R^{n \times k} \),
+  \[
+    \begin{aligned}
+      Dh(X)[V]
+      &= \left.\frac{d}{dt}h(X+tV)\right|_{t=0} \\
+      &= X^\top V + V^\top X.
+    \end{aligned}
+  \]
+  To show that \( 0 \) is a regular value of \( h \), let \( X \in \St \) and \( S \in \Sym(k) \).
+  Taking \( V = \dfrac{1}{2} X S \), we obtain
+  \[
+    Dh(X)[V] = \frac{1}{2}X^\top XS + \frac{1}{2}S^\top X^\top X = S,
+  \]
+  since \( X^\top X = I_k \) and \( S^\top = S \).
+  Hence \( Dh(X) \) is surjective for every \( X \in h^{-1}(0) \).
+
+  The set \( \St \) is nonempty, since the first \( k \)
+  columns of \( I_n \) form an element of \( \St \).
+  By \cref{thm:regular-value}, \( \St \) is an embedded submanifold of \( \R^{n \times k} \), with
+  \[
+    \dim \St = \dim \R^{n \times k} - \dim \Sym(k) = nk - \frac{k(k+1)}{2}.
+  \]
 \end{proof}
 
 \begin{proposition}[Compactness]\label{prop:stiefel-compact}
-  % State compactness and the existence of extrema for continuous objectives.
+  The Stiefel manifold \( \St \) is compact. Consequently, every continuous function \( f : \St \longrightarrow \R \) attains its maximum and minimum.
 \end{proposition}
 
 \begin{proof}
-  % Show closedness and boundedness; the squared Frobenius norm is k.
+  Since the map \( h(X) = X^\top X - I_k \) is continuous, \( \St = h^{-1}(0) \) is closed in \( \R^{n \times k} \).
+  For every \( X \in \St \), its Frobenius norm satisfies
+  \[
+    \|X\|_F^2 = \tr(X^\top X) = \tr(I_k) = k,
+  \]
+  so \( \St \) is bounded. By the Heine-Borel theorem, \( \St \) is compact. Since it is nonempty, the extreme value theorem gives the stated conclusion.
 \end{proof}
 
-\begin{proposition}[Tangent and normal spaces]\label{prop:stiefel-tangent-normal}
-  % State T_X St(n,k) = {V : X^T V + V^T X = 0}.
-  % Define the normal space as its Frobenius-orthogonal complement and identify it as {XS : S symmetric}.
+\begin{proposition}\label{prop:stiefel-tangent-normal}
+  For \( X \in \St \), the tangent space is
+  \[
+    T_X\St = \{V \in \R^{n \times k} : X^\top V + V^\top X = 0\}.
+  \]
+  The \textbf{normal space} is the orthogonal complement of \( T_X\St \)
+  with respect to the Frobenius inner product, and is given by
+  \[
+    N_X\St := (T_X\St)^\perp = \{XS : S \in \Sym(k)\}.
+  \]
+  These are the descriptions in~\cite[Section 7.3, equations (7.17) and (7.25)]{boumal}.
 \end{proposition}
 
 \begin{proof}
-  % Use the derivative kernel for the tangent space; establish the normal space by orthogonality and dimension.
+  For the map \( h(X) = X^\top X - I_k \), we have already shown that \( 0 \) is a regular value and
+  \[
+    Dh(X)[V] = X^\top V + V^\top X.
+  \]
+  By \cref{thm:regular-value},
+  \[
+    T_X\St = \ker Dh(X) = \{V \in \R^{n \times k} : X^\top V + V^\top X = 0\}.
+  \]
+
+  Let \( S \in \Sym(k) \) and \( V \in T_X\St \).
+  The tangent-space equation implies that \( X^\top V \) is skew-symmetric. 
+  Since symmetric and skew-symmetric matrices are orthogonal under the Frobenius inner product,
+  \[
+    \langle XS,V\rangle = \tr(S^\top X^\top V) = 0.
+  \]
+  Thus \( \{XS : S \in \Sym(k)\} \subseteq N_X\St \).
+
+  The linear map \( S \mapsto XS \) is injective, since \( X^\top XS = S \). Its image therefore has dimension \( k(k+1)/2 \).
+  Also,
+  \[
+    \dim N_X\St = nk - \dim T_X\St = \frac{k(k+1)}{2}.
+  \]
+  The inclusion is therefore an equality.
 \end{proof}
 
 \begin{proposition}[Tangent projection]\label{prop:stiefel-projection}
-  % State Proj_X(Z) = Z - X sym(X^T Z).
+  For \( X \in \St \), the orthogonal projection onto \( T_X\St \) is
+  \[
+    \Proj_X(Z) = Z - X\sym(X^\top Z), \qquad Z \in \R^{n \times k},
+  \]
+  as in \cite[Section 7.3, equation (7.26)]{boumal}.
 \end{proposition}
 
 \begin{proof}
-  % Verify tangency of the projection and normality of the difference.
+  Let \( Z \in \R^{n \times k} \). By \cref{prop:stiefel-tangent-normal}, the difference between \( Z \) and its orthogonal projection has the form
+  \[
+    Z - \Proj_X(Z) = XS
+  \]
+  for some \( S \in \Sym(k) \).
+  Since \( \Proj_X(Z) = Z - XS \) is tangent at \( X \),
+  \[
+    X^\top(Z-XS) + (Z-XS)^\top X = 0.
+  \]
+  Using \( X^\top X = I_k \) and \( S^\top = S \), this gives
+  \[
+    X^\top Z + Z^\top X - 2S = 0.
+  \]
+  Hence
+  \[
+    S = \frac{X^\top Z + Z^\top X}{2} = \sym(X^\top Z),
+  \]
+  which yields the stated formula.
 \end{proof}
 
 \begin{corollary}[Riemannian gradient]\label{cor:stiefel-gradient}
-  % Derive the gradient formula from \cref{prop:gradient-projection}.
-  % For f(X)=tr(X^T A X), derive grad f(X)=2(I-XX^T)AX.
+  Let \( f : \St \longrightarrow \R \) be smooth, and let \( \bar{f} \) be a smooth extension to an open neighbourhood of \( \St \) in \( \R^{n \times k} \). 
+  With the induced Frobenius metric,
+  \[
+    \grad f(X) = \nabla\bar{f}(X) - X\sym\bigl(X^\top\nabla\bar{f}(X)\bigr),
+  \]
+  as in \cite[Section 7.3, equation (7.28)]{boumal}.
+
+  In particular, for \( A \in \Sym(n) \) and \( f(X) = \tr(X^\top A X) \),
+  \[
+    \grad f(X) = 2(I_n-XX^\top)AX.
+  \]
 \end{corollary}
 
 \begin{proof}
-  % Use the ambient gradient and the tangent projection.
+  By \cref{prop:gradient-projection,prop:stiefel-projection},
+  \[
+    \grad f(X) = \Proj_X\bigl(\nabla\bar{f}(X)\bigr) = \nabla\bar{f}(X) - X\sym\bigl(X^\top\nabla\bar{f}(X)\bigr).
+  \]
+
+  For the particular objective, take the extension \( \bar{f}(X) = \tr(X^\top A X) \) on \( \R^{n \times k} \).
+  Since \( A^\top = A \), for every \( V \in \R^{n \times k} \),
+  \[
+    \begin{aligned}
+      D\bar{f}(X)[V]
+      &= \tr(V^\top AX + X^\top AV) \\
+      &= 2\tr(V^\top AX) = \langle 2AX,V\rangle.
+    \end{aligned}
+  \]
+  Hence \( \nabla\bar{f}(X) = 2AX \).
+  The matrix \( X^\top AX \) is symmetric, so
+  \[
+    \grad f(X) = 2AX - 2XX^\top AX = 2(I_n-XX^\top)AX.
+  \]
 \end{proof}
 
+To construct a retraction, we first establish smoothness of the matrix inverse square root.
+
 \begin{lemma}[Smooth matrix square roots]\label{lem:smooth-matrix-square-root}
-  % State smoothness of the positive-definite square root and inverse square root.
+  Let \( \Sym^+(k) \) denote the open subset of \( \Sym(k) \) consisting of positive-definite matrices.
+  Every \( A \in \Sym^+(k) \) has a unique positive-definite symmetric square root \( A^{1/2} \). The maps
+  \[
+    A \longmapsto A^{1/2}, \qquad A \longmapsto A^{-1/2} := (A^{1/2})^{-1}
+  \]
+  are smooth on \( \Sym^+(k) \).
 \end{lemma}
 
 \begin{proof}
-  % Use the spectral theorem for existence and uniqueness.
-  % Show the derivative H -> SH+HS of S -> S^2 on Sym(k) is invertible for positive-definite S.
-  % Apply Segal Theorem 3.9; use smooth inversion for the inverse square root.
+  
+  By the spectral theorem, write
+  \[
+    A = Q\diag(\lambda_1,\dots,\lambda_k)Q^\top, \qquad \lambda_i > 0,
+  \]
+  where \( Q \) is orthogonal. 
+  Then
+  \[
+    S = Q \diag( \sqrt{ \lambda_1 }, \dots, \sqrt{ \lambda_k }) Q^\top
+  \]
+  is positive-definite and satisfies \( S^2 = A \).
+
+  To see uniqueness, suppose \( S \in \Sym^+(k) \) satisfies \( S^2 = A \). Then \( S \) commutes with \( A \), so it preserves each eigenspace of \( A \).
+  On the eigenspace corresponding to \( \lambda \), its restriction is symmetric and positive-definite, with square \( \lambda I \).
+  The spectral theorem therefore implies that this restriction is \( \sqrt{\lambda}I \). Thus \( S \) is uniquely determined.
+
+  Consider the smooth map
+  \[
+    q : \Sym^+(k) \longrightarrow \Sym^+(k), \qquad q(S) = S^2.
+  \]
+  Its derivative is
+  \[
+    Dq(S)[H] = SH + HS.
+  \]
+  Choose an orthogonal matrix \( Q \) such that
+  \( S = Q \diag( \mu_1, \dots, \mu_k)Q^\top \), with each \( \mu_i > 0 \). Writing \( \widetilde{H} = Q^\top H Q \),
+  we have
+  \[
+    \bigl(Q^\top Dq(S)[H]Q\bigr)_{ij} = (\mu_i+\mu_j)\widetilde{H}_{ij}.
+  \]
+  Since every \( \mu_i+\mu_j \) is positive, \( Dq(S) \) is an invertible linear map on \( \Sym(k) \).
+
+  By the inverse function theorem~\cite[Theorem 3.9]{segal}, \( q \) has a smooth local inverse near every \( S \in \Sym^+(k) \).
+  Uniqueness of the positive-definite square root identifies these local inverses with \( A \mapsto A^{1/2} \), so this map is smooth.
+  Since matrix inversion is smooth on invertible matrices, \( A \mapsto A^{-1/2} \) is also smooth.
 \end{proof}
 
 \begin{proposition}[Polar retraction]\label{prop:stiefel-polar-retraction}
-  % State R_X(V)=(X+V)(I_k+V^T V)^(-1/2) for tangent V.
+  The map
+  \[
+    R : T\St \longrightarrow \St, \qquad R_X(V) = (X+V)(I_k+V^\top V)^{-1/2},
+  \]
+  is a retraction on \( \St \), called the \textbf{polar retraction}~\cite[Section 7.3, equation (7.24)]{boumal}.
 \end{proposition}
 
 \begin{proof}
-  % Use \cref{lem:smooth-matrix-square-root} for smoothness.
-  % Check feasibility and the value and derivative of R_X(tV) at t=0.
+  For every \( V \in \R^{n \times k} \), the matrix \( I_k+V^\top V \) is positive-definite, since
+  \[
+    u^\top(I_k+V^\top V)u = \|u\|^2 + \|Vu\|^2 > 0 \qquad \text{for every } u \ne 0.
+  \]
+  By \cref{lem:smooth-matrix-square-root}, the formula for \( R_X(V) \) defines a smooth map into \( \R^{n \times k} \) on the ambient space \( \R^{n \times k} \times \R^{n \times k} \).
+
+  For \( X \in \St \) and \( V \in T_X\St \), we have \( X^\top V + V^\top X = 0 \), so
+  \[
+    (X+V)^\top(X+V) = I_k+V^\top V.
+  \]
+  Writing \( B = I_k+V^\top V \), it follows that
+  \[
+    R_X(V)^\top R_X(V) = B^{-1/2} B B^{-1/2} = I_k.
+  \]
+  Thus \( R_X(V) \in \St \), and \( R \) is smooth.
+
+  Clearly, \( R_X(0) = X \). To verify the first-order condition, write
+  \[
+    C(t) = (I_k+t^2V^\top V)^{-1/2}.
+  \]
+  The chain rule gives \( C'(0) = 0 \), since the derivative of \( I_k+t^2V^\top V \) vanishes at \( t=0 \).
+  As \( C(0) = I_k \), we obtain
+  \[
+    \left.\frac{d}{dt}R_X(tV)\right|_{t=0} = \left.\frac{d}{dt}\bigl((X+tV)C(t)\bigr)\right|_{t=0} = V.
+  \]
+  Hence \( R \) satisfies the defining properties of a retraction.
 \end{proof}
 
-% Optional closing observation: St(n,1)=S^(n-1) and St(n,n)=O(n).
+\begin{remark}
+  The Stiefel manifold includes two familiar special cases.
+  When \( k=1 \), the condition \( X^\top X=1 \) says that \( X \) is a unit vector, so
+  \[
+    \mathrm{St}(n,1)=S^{n-1}.
+  \]
+  When \( k=n \), the condition \( X^\top X=I_n \) defines the orthogonal group, so
+  \[
+    \mathrm{St}(n,n)=\Orth(n).
+  \]
+\end{remark}
 
 \section{The Grassmann Manifold}\label{sec:grassmann}
 
