@@ -76,21 +76,34 @@
 % --------------------------------------------------
 % Custom commands
 % --------------------------------------------------
+% Spaces and sets
 \newcommand{\R}{\mathbb{R}}
-\newcommand{\C}{\mathbb{C}}
-\newcommand{\Hq}{\mathbb{H}}
-\newcommand{\Oq}{\mathbb{O}}
+\newcommand{\E}{\mathcal{E}}                 % ambient vector space
+\newcommand{\M}{\mathcal{M}}                 % generic manifold
+\newcommand{\St}{\mathrm{St} (n,k)}
+\newcommand{\Gr}{\mathrm{Gr} (k,n)}
+\newcommand{\Orth}{\mathrm{O}}               % O(k), O(n)
+\newcommand{\GL}{\mathrm{GL}}                % GL_k
+\newcommand{\Sym}{\mathrm{Sym}}              % Sym(k): symmetric matrices
+\newcommand{\so}{\mathfrak{so}}              % so(k): skew-symmetric matrices
+\newcommand{\Hor}{\mathcal{H}}               % horizontal space H_X
+\newcommand{\Ver}{\mathcal{V}}               % vertical space V_X
 
-\newcommand{\Rea}{\operatorname{Re}}
-\newcommand{\Ima}{\operatorname{Im}}
-
-\newcommand{\St}{\mathrm{St}(n, k)}
-\newcommand{\Gr}{\mathrm{Gr}(k,n)}
+% Operators
 \DeclareMathOperator{\rank}{rank}
-\DeclareMathOperator{\sym}{sym}
-\DeclareMathOperator{\Skew}{skew}
+\DeclareMathOperator{\sym}{sym}              % symmetric part
+\DeclareMathOperator{\Skew}{skew}            % skew-symmetric part
 \DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\grad}{grad}            % Riemannian gradient
+\DeclareMathOperator{\Proj}{Proj}            % tangent projection
+\DeclareMathOperator{\col}{col}              % column space
+\DeclareMathOperator{\im}{im}                % image
+\DeclareMathOperator{\id}{id}                % identity map
+\DeclareMathOperator{\Span}{span}
+\DeclareMathOperator{\diag}{diag}
 
+% Notation
+\newcommand{\T}{^{\top}}                     % transpose: X\T X
 \newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
 \newcommand{\inner}[2]{\left\langle #1,#2 \right\rangle}
 
@@ -129,15 +142,14 @@
 % 2. Background / Preliminaries
 % --------------------------------------------------
 \section{Preliminaries}\label{sec:prelim}
-We follow the conventions of \cite{segal} and \cite{boumal}.
-
 % Introduce the basic objects and notation needed for the paper.
 % This section should contain definitions before they are used later.
 
 \subsection{Basic Definitions}
 
-\begin{definition}\label{def:coordinate-chart}
-  Let \( X \) be a topological space. A \textbf{Co-ordinate Chart} on \( X \) is the pair \( (U, \varphi)\) where \( U \subset X \) is open, and \( \varphi \) is a homeomorphism 
+\begin{definition}\label{def:co-ordinate-chart}
+  Let \( X \) be a topological space. 
+  A \textbf{Co-ordinate Chart} on \( X \) is the pair \( (U, \varphi)\) where \( U \subset X \) is open, and \( \varphi \) is a homeomorphism 
   \[
     \varphi: U \xlongrightarrow{\sim} \varphi(U)
   \]
@@ -145,7 +157,8 @@ We follow the conventions of \cite{segal} and \cite{boumal}.
 \end{definition}
 
 \begin{definition}\label{def:topological-manifold}
-  Let \( X \) be a topological space, and fix a nonnegative integer \( n \). \( X\) is an \textbf{n-dimensional topological manifold} if and only if \( X\) is Hausdorff and second countable, and for any point \( x \in X \), there exists a co-ordinate chart,
+  Let \( X \) be a topological space, and fix a nonnegative integer \( n \).
+  \( X\) is an \textbf{n-dimensional topological manifold} if \( X\) is Hausdorff and second countable, and for any point \( x \in X \), there exists a co-ordinate chart,
   \[
     \varphi: U \xlongrightarrow{\sim} \varphi(U) \subset \R^n
   \]
@@ -157,7 +170,8 @@ We follow the conventions of \cite{segal} and \cite{boumal}.
 \end{definition}
 
 \begin{definition}\label{def:transition-function}
-  Let \( X \) be a topological manifold, and let \( (U, \varphi_1) \) and \( (V, \varphi_2) \) be two co-ordinate charts on \( X \). The \textbf{transition function} between these two co-ordinate charts is the function:
+  Let \( X \) be a topological manifold, and let \( (U, \varphi_1) \) and \( (V, \varphi_2) \) be two co-ordinate charts on \( X \).
+  The \textbf{transition function} between these two co-ordinate charts is the function:
   \[
     \phi_{21} = \varphi_2 \circ \varphi_1^{-1} : \varphi_1(U \cap V) \xlongrightarrow{\sim} \varphi_2(U \cap V) 
   \]
@@ -173,7 +187,8 @@ We follow the conventions of \cite{segal} and \cite{boumal}.
 \end{definition}
 
 \begin{definition}\label{def:atlas}
-  Let \( X \) be a topological manifold. An \textbf{atlas} on \( X \) is a collection of co-ordinate charts on \( X \):
+  Let \( X \) be a topological manifold.
+  An \textbf{atlas} on \( X \) is a collection of co-ordinate charts on \( X \):
   \[
     \varphi_i : U_i \xlongrightarrow{\sim} \widetilde{U}_i \subset \R^n
   \]
@@ -182,7 +197,7 @@ We follow the conventions of \cite{segal} and \cite{boumal}.
   \bigcup_{i \in I}U_i = X    
   \]
   
-  An atlas is a \textbf{smooth atlas} if and only if for any two co-ordinate charts in the atlas, the transition function
+  An atlas is a \textbf{smooth atlas} if for any two co-ordinate charts in the atlas, the transition function
   \[
     \phi_{ji} = \varphi_j \circ \varphi_i^{-1} : \varphi_i(U_i \cap U_j) \xlongrightarrow{\sim} \varphi_j(U_i \cap U_j), \qquad i,j \in I
   \]
@@ -194,14 +209,15 @@ We follow the conventions of \cite{segal} and \cite{boumal}.
   \[
     \mathcal{A} = \{(U_i, \varphi_i); i \in I\}
   \]
-  be a smooth atlas on \( X \). Let \( (U, \varphi) \) be any coordinate chart on \( X \). The chart \( (U, \varphi) \) is \textbf{compatible} with the atlas \( \mathcal{A} \) if and only if the transition functions between \( (U, \varphi) \) and any chart in \( \mathcal{A} \) are diffeomorphisms, i.e. they are smooth functions with smooth inverses.
+  be a smooth atlas on \( X \). Let \( (U, \varphi) \) be any co-ordinate chart on \( X \).
+  The chart \( (U, \varphi) \) is \textbf{compatible} with the atlas \( \mathcal{A} \) if the transition functions between \( (U, \varphi) \) and any chart in \( \mathcal{A} \) are diffeomorphisms, i.e. they are smooth functions with smooth inverses.
 
-  In other words, the new chart \( (U, \varphi) \) is compatible with the atlas \( \mathcal{A} \) if and only if the union \( \mathcal{A} \cup \{(U, \varphi)\} \) is still a smooth atlas.
+  In other words, the new chart \( (U, \varphi) \) is compatible with the atlas \( \mathcal{A} \) if the union \( \mathcal{A} \cup \{(U, \varphi)\} \) is still a smooth atlas.
   
   \bigskip
   \noindent
   
-  Let \( \mathcal{A}, \mathcal{B} \) be smooth atlases on \( X \). The atlases \( \mathcal{A} \) and \( \mathcal{B} \) are \textbf{compatible} if and only if every chart in \( \mathcal{A} \) is compatible with \( \mathcal{B} \), and vice versa.
+  Let \( \mathcal{A}, \mathcal{B} \) be smooth atlases on \( X \). The atlases \( \mathcal{A} \) and \( \mathcal{B} \) are \textbf{compatible} if every chart in \( \mathcal{A} \) is compatible with \( \mathcal{B} \), and vice versa.
 \end{definition}
 
 \begin{corollary}[{\cite[Corollary 2.20]{segal}}]\label{cor:compatibility-equivalence}
@@ -220,27 +236,31 @@ We follow the conventions of \cite{segal} and \cite{boumal}.
   \[
     H: X \longrightarrow Y
   \]
-  be a continuous function. Fix a point \( x \in X \). \( H \) is \textbf{smooth at \( x \)} if and only if there exists a chart \((U,\varphi)\) compatible with the smooth structure on \(X\), with \(x \in U\), and a chart \((V,\psi)\) compatible with the smooth structure on \(Y\), with \(H(U) \subset V\), such that the composition
+  be a continuous function.
+  Fix a point \( x \in X \).
+  \( H \) is \textbf{smooth at \( x \)} ifthere exists a chart \((U,\varphi)\) compatible with the smooth structure on \(X\), with \(x \in U\), and a chart \((V,\psi)\) compatible with the smooth structure on \(Y\), with \(H(U) \subset V\), such that the composition
   \[
     \psi \circ H \circ \varphi^{-1} : \varphi(U) \longrightarrow \psi(V)
   \]
   is smooth at \( \varphi(x) \). 
   
-  The function \( H \) is \textbf{smooth} if and only if it is smooth at every point \( x \in X \).
+  The function \( H \) is \textbf{smooth} if it is smooth at every point \( x \in X \).
 \end{definition}
 
 \begin{definition}\label{def:diffeomorphism}
-  Let \(X, Y \) be smooth manifolds. A function 
+  Let \(X, Y \) be smooth manifolds. 
+  A function 
   \[
     H: X \longrightarrow Y
   \]
-  is a \textbf{diffeomorphism} if and only if \( H \) is a bijection, and both \( H \) and \( H^{-1} \) are smooth.
+  is a \textbf{diffeomorphism} if \( H \) is a bijection, and both \( H \) and \( H^{-1} \) are smooth.
 
   If there exists a diffeomorphism between \( X \) and \( Y \), they are \textbf{diffeomorphic}.
 \end{definition}
 
 \begin{definition}\label{def:pseudo-chart}
-  Following Segal, let \(X\) be a set. A \textbf{pseudo-chart} on \(X\) is the pair \((U,\varphi)\), where \(U \subset X\) and
+  Let \(X\) be a set. 
+  A \textbf{pseudo-chart} on \(X\) is the pair \((U,\varphi)\), where \(U \subset X\) and
   \[
     \varphi : U \longrightarrow \varphi{(U)}
   \]
@@ -254,7 +274,7 @@ We follow the conventions of \cite{segal} and \cite{boumal}.
 \end{definition}
 
 \begin{proposition}[{\cite[Proposition 2.26]{segal}}]\label{prop:pseudo-atlas-topology}
-  Let \( X \) be a set, and let \( \mathcal{A} = \{ (U_i,\varphi_i) : i \in I \} \) be a pseudo-atlas for \( X \). Suppose that for any pair \( (U_1, \varphi_1), (U_2, \varphi_2) \) of pseudo-charts in \( \mathcal{A} \), we have that:
+  Let \( X \) be a set, and let \( \mathcal{A} = \{ (U_i,\varphi_i) : i \in I \} \) wherebe a pseudo-atlas for \( X \). Suppose that for any pair \( (U_1, \varphi_1), (U_2, \varphi_2) \) of pseudo-charts in \( \mathcal{A} \), we have that:
   \begin{enumerate}
     \item both \( \varphi_1(U_1 \cap U_2) \subset \varphi_1(U_1) \) and \( \varphi_2(U_1 \cap U_2) \subset \varphi_2(U_2) \) are open subsets, and
     \item the transition function is continuous. 
@@ -267,7 +287,8 @@ We follow the conventions of \cite{segal} and \cite{boumal}.
 \end{corollary}
 
 \begin{definition}\label{def:embedded-submanifold}
-  Let \( X \) be a smooth manifold of dimension \( n \), let \( m \) be an integer satisfying \( 0 \leq m \leq n \), and let \( \mathcal{M} \subset X \). The subset \( \mathcal{M} \) is an \textbf{m-dimensional submanifold} of \( X \) if and only if, for every \( x \in \mathcal{M} \), there exists a compatible co-ordinate chart
+  Let \( X \) be a smooth manifold of dimension \( n \), let \( m \) be an integer satisfying \( 0 \leq m \leq n \), and let \( \mathcal{M} \subset X \).
+  The subset \( \mathcal{M} \) is an \textbf{m-dimensional submanifold} of \( X \) if, for every \( x \in \mathcal{M} \), there exists a compatible co-ordinate chart
   \[
     \varphi : U \xlongrightarrow{\sim} \varphi(U) \subset \R^n
   \]
@@ -275,108 +296,113 @@ We follow the conventions of \cite{segal} and \cite{boumal}.
   \[
     \varphi(U \cap \mathcal{M}) = \varphi(U) \cap A.
   \]
-  This is the convention of \cite[Definition 3.2]{segal}. We also use the term \textbf{embedded submanifold} for a submanifold in this sense.
+  This is the convention of~\cite[Definition 3.2]{segal}. We also use the term \textbf{embedded submanifold} for a submanifold in this sense.
 \end{definition}
 
-By \cite[Proposition 3.7]{segal}, \( \mathcal{M} \), with the subspace topology, carries a smooth structure induced from \( X \). We always equip a submanifold with this structure.
+By~\cite[Proposition 3.7]{segal}, \( \mathcal{M} \), with the subspace topology, carries a smooth structure induced from \( X \).
+We always equip a submanifold with this structure.
 
 \begin{definition}\label{def:tangent-space}
-  Let \( \mathcal{M} \) be a smooth manifold, and let \( x \in \mathcal{M} \). A curve through \( x \) is a smooth function \( c : I \longrightarrow \mathcal{M} \), where \( I \) is an open interval containing \( 0 \) and \( c(0) = x \). Two curves \( c_1, c_2 \) through \( x \) are \textbf{tangent at \( x \)} if and only if, for any compatible co-ordinate chart \( (U, \varphi) \) containing \( x \),
+  Let \( \mathcal{M} \) be a smooth manifold, and let \( x \in \mathcal{M} \). A curve through \( x \) is a smooth function \( c : I \longrightarrow \mathcal{M} \), where \( I \) is an open interval containing \( 0 \) and \( c(0) = x \).
+  Two curves \( c_1, c_2 \) through \( x \) are \textbf{tangent at \( x \)} if, for any compatible co-ordinate chart \( (U, \varphi) \) containing \( x \),
   \[
     \left.\frac{d}{dt}(\varphi \circ c_1)(t)\right|_{t=0} = \left.\frac{d}{dt}(\varphi \circ c_2)(t)\right|_{t=0}.
   \]
-  The compositions are taken on sufficiently small intervals around \( 0 \). This condition is independent of the choice of chart.
+  The compositions are taken on sufficiently small intervals around \( 0 \).
+  This condition is independent of the choice of chart.
 
-  A \textbf{tangent vector} at \( x \) is an equivalence class of curves through \( x \) under this relation. The \textbf{tangent space} at \( x \) is the set
+  A \textbf{tangent vector} at \( x \) is an equivalence class of curves through \( x \) under this relation.
+  The \textbf{tangent space} at \( x \) is the set
   \[
     T_x\mathcal{M} = \{\text{smooth curves through } x\}/\!\sim,
   \]
-  where \( c_1 \sim c_2 \) means that the curves are tangent at \( x \), following \cite[Definitions 5.4--5.5]{segal}.
+  where \( c_1 \sim c_2 \) means that the curves are tangent at \( x \), following~\cite[Definitions 5.4--5.5]{segal}.
 \end{definition}
 
-By \cite[Proposition 5.8]{segal}, \( T_x\mathcal{M} \) is a vector space of dimension \( \dim\mathcal{M} \). Its vector space structure is the one for which the chart identification
+By~\cite[Proposition 5.8]{segal}, \( T_x\mathcal{M} \) is a vector space of dimension \( \dim\mathcal{M} \). Its vector space structure is the one for which the chart identification
 \[
   [c] \longmapsto \left.\frac{d}{dt}(\varphi \circ c)(t)\right|_{t=0}
 \]
 is a linear isomorphism with \( \R^{\dim\mathcal{M}} \).
 
-For an embedded submanifold \( \mathcal{M} \) of a finite-dimensional real vector space \( \mathcal{E} \), we identify \( [c] \) with the ambient velocity \( c'(0) \), as in \cite[Section 5.2]{segal}. Under this identification, \( T_x\mathcal{M} \) is a subspace of \( \mathcal{E} \), and
+For an embedded submanifold \( \mathcal{M} \) of a finite-dimensional real vector space \( \mathcal{E} \), we identify \( [c] \) with the ambient velocity \( c'(0) \), as in~\cite[Section 5.2]{segal}. Under this identification, \( T_x\mathcal{M} \) is a subspace of \( \mathcal{E} \), and
 \[
   T_x\mathcal{M} = \{c'(0) : c : I \longrightarrow \mathcal{M} \text{ is smooth and } c(0) = x\}.
 \]
-Here, derivatives are taken in \( \mathcal{E} \). If \( \mathcal{M} \) is open in \( \mathcal{E} \), then \( T_x\mathcal{M} = \mathcal{E} \).
+Here, derivatives are taken in \( \mathcal{E} \).
+If \( \mathcal{M} \) is open in \( \mathcal{E} \), then \( T_x\mathcal{M} = \mathcal{E} \).
 
 \begin{definition}\label{def:derivative}
-  Let \( X, Y \) be smooth manifolds, and let \( F : X \longrightarrow Y \) be smooth. The \textbf{derivative} of \( F \) at \( x \in X \) is the linear map
+  Let \( X, Y \) be smooth manifolds, and let \( F : X \longrightarrow Y \) be smooth.
+  The \textbf{derivative} of \( F \) at \( x \in X \) is the linear map
   \[
     DF(x) : T_xX \longrightarrow T_{F(x)}Y, \qquad [c] \longmapsto [F \circ c].
   \]
-  This map is well-defined and linear by \cite[Proposition 5.10]{segal}.
+  This map is well-defined and linear by~\cite[Proposition 5.10]{segal}.
 \end{definition}
 
 \begin{theorem}[Regular level sets {\cite[Proposition 3.16 and Lemma 5.13]{segal}}]\label{thm:regular-value}
-  Let \(\mathcal E\) and \(\mathcal E'\) be finite-dimensional
-  real vector spaces, and let
-  \(F:\mathcal E\to\mathcal E'\) be smooth.
-  A point \(c\in\mathcal E'\) is called a regular value of \(F\)
-  if \(DF(x)\) is surjective for every \(x\in F^{-1}(c)\).
+  Let \( \mathcal{E} \) and \( \mathcal{E'} \) be finite-dimensional real vector spaces, and let \( F : \mathcal{E} \rightarrow \mathcal{E'} \) be smooth.
+  A point \( c \in \mathcal{E'} \) is called a regular value of \( F \) if \( DF(x) \) is surjective for every \( x \in F^{-1}(c) \).
 
-  If \(c\) is a regular value and
-  \(\mathcal M=F^{-1}(c)\) is nonempty, then \(\mathcal M\)
-  is a smooth embedded submanifold of \(\mathcal E\), with
+  If \(c\) is a regular value and \( \mathcal M = F^{-1}(c)\) is nonempty, then \(\mathcal M\) is a smooth embedded submanifold of \(\mathcal E\), with
   \[
-    \dim\mathcal M=\dim\mathcal E-\dim\mathcal E',
-    \qquad
-    T_x\mathcal M=\ker DF(x)
-    \quad\text{for every }x\in\mathcal M.
+    \dim\mathcal M=\dim\mathcal E-\dim\mathcal E', \qquad T_x\mathcal M = \ker DF(x) \quad \text{for every } x \in \mathcal{M}.
   \]
 \end{theorem}
 
 To define gradients on these manifolds, we equip their tangent spaces with inner products.
 
 \begin{definition}\label{def:riemannian-manifold}
-  Following \cite[Definitions 3.51--3.53]{boumal}, let \( \mathcal{M} \) be a smooth manifold. A \textbf{Riemannian metric} on \( \mathcal{M} \) assigns an inner product \( \langle \cdot, \cdot \rangle_x \) to each tangent space \( T_x\mathcal{M} \), varying smoothly with \( x \). In co-ordinates \( (U, \varphi) \), this means that each function
+  Let \( \mathcal{M} \) be a smooth manifold. A \textbf{Riemannian metric} on \( \mathcal{M} \) assigns an inner product \( \langle \cdot, \cdot \rangle_x \) to each tangent space \( T_x\mathcal{M} \), varying smoothly with \( x \).
+  In co-ordinates \( (U, \varphi) \), this means that each function
   \[
-    x \longmapsto \left\langle (D\varphi(x))^{-1}e_i, (D\varphi(x))^{-1}e_j \right\rangle_x
+    x \longmapsto {\left\langle {(D\varphi(x))}^{-1}e_i, {(D\varphi(x))}^{-1}e_j \right\rangle}_x
   \]
-  is smooth on \( U \), where \( e_i, e_j \) are standard basis vectors of \( \R^{\dim\mathcal{M}} \). A smooth manifold equipped with a Riemannian metric is a \textbf{Riemannian manifold}.
+  is smooth on \( U \), where \( e_i, e_j \) are standard basis vectors of \( \R^{\dim\mathcal{M}} \).
+  A smooth manifold equipped with a Riemannian metric is a \textbf{Riemannian manifold}.
 \end{definition}
 
 \begin{definition}\label{def:riemannian-submanifold}
-  Let \(\mathcal M\) be an embedded submanifold of a finite-dimensional real vector space \(\mathcal E\) equipped with an inner product \(\langle\cdot,\cdot\rangle_{\mathcal E}\). The induced metric on \(\mathcal M\) is defined by
+  Let \(\mathcal M\) be an embedded submanifold of a finite-dimensional real vector space \(\mathcal E\) equipped with an inner product \(\langle\cdot,\cdot\rangle_{\mathcal E}\).
+  The induced metric on \(\mathcal M\) is defined by
   \[
     \langle u,v\rangle_x=\langle u,v\rangle_{\mathcal E}, \qquad u,v\in T_x\mathcal M.
   \]
-  This is a Riemannian metric by \cite[Proposition 3.54]{boumal}. Equipped with this metric, \(\mathcal M\) is a \textbf{Riemannian submanifold} of \(\mathcal E\).
+  This is a Riemannian metric by~\cite[Proposition 3.54]{boumal}. Equipped with this metric, \(\mathcal M\) is a \textbf{Riemannian submanifold} of \(\mathcal E\).
 \end{definition}
 
 \begin{definition}\label{def:riemannian-gradient}
-  Let \( \mathcal{M} \) be a Riemannian manifold, and let \( f : \mathcal{M} \rightarrow \mathbb{R} \) be smooth. For each \( x \in \mathcal{M} \), the \textbf{Riemannian gradient} of \( f \) at \( x \) is the unique vector \( \operatorname{grad}f(x) \in T_x\mathcal{M} \) satisfying
+  Let \( \mathcal{M} \) be a Riemannian manifold, and let \( f : \mathcal{M} \rightarrow \mathbb{R} \) be smooth.
+  For each \( x \in \mathcal{M} \), the \textbf{Riemannian gradient} of \( f \) at \( x \) is the unique vector \( \grad f(x) \in T_x\mathcal{M} \) satisfying
   \[
-    Df(x)[v] = \langle \operatorname{grad}f(x), v\rangle _x \qquad \text{for every } v \in T_x \mathcal{M}.
+    Df(x)[v] = \langle \grad f(x), v\rangle _x \qquad \text{for every } v \in T_x \mathcal{M}.
   \]
   Here,
   \[
     Df(x)[v] = \left.\frac{d}{dt}f(c(t))\right|_{t=0},
   \]
-  where \(c\) is any smooth curve through \(x\) representing \(v\). This value is independent of the choice of such a curve.
+  where \(c\) is any smooth curve through \(x\) representing \(v\).
+  This value is independent of the choice of such a curve.
 \end{definition}
 
 \begin{definition}\label{def:orthogonal-projector}
-  Let \( \mathcal{M} \) be an embedded submanifold of a finite-dimensional real vector space \( \mathcal{E} \) equipped with an inner product \( \langle \cdot, \cdot \rangle \), and let \( x \in \mathcal{M} \). The \textbf{orthogonal projector} to \( T_x\mathcal{M} \) is the linear map \( \operatorname{Proj}_x : \mathcal{E} \rightarrow \mathcal{E} \) characterized by the following properties:
+  Let \( \mathcal{M} \) be an embedded submanifold of a finite-dimensional real vector space \( \mathcal{E} \) equipped with an inner product \( \langle \cdot, \cdot \rangle \), and let \( x \in \mathcal{M} \).
+  The \textbf{orthogonal projector} to \( T_x\mathcal{M} \) is the linear map \( \Proj_x : \mathcal{E} \rightarrow \mathcal{E} \) characterized by the following properties:
   \begin{enumerate}
-    \item Range: \( \operatorname{im}(\operatorname{Proj}_x) = T_x\mathcal{M} \).
-    \item Projector: \( \operatorname{Proj}_x \circ \operatorname{Proj}_x = \operatorname{Proj}_x \).
-    \item Orthogonal: \( \langle u - \operatorname{Proj}_x(u), v \rangle = 0 \quad \text{for every } v \in T_x\mathcal{M} \text{ and } u \in \mathcal{E} \).
+    \item Range: \( \im(\Proj_x) = T_x\mathcal{M} \).
+    \item Projector: \( \Proj_x \circ \Proj_x = \Proj_x \).
+    \item Orthogonal: \( \langle u - \Proj_x(u), v \rangle = 0 \quad \text{for every } v \in T_x\mathcal{M} \text{ and } u \in \mathcal{E} \).
   \end{enumerate}
-  For an open submanifold, \( \operatorname{Proj}_x \) is the identity because \( T_x\mathcal{M} = \mathcal{E} \).
+  For an open submanifold, \( \Proj_x \) is the identity because \( T_x\mathcal{M} = \mathcal{E} \).
 \end{definition}
 
 
 \begin{proposition}[{\cite[Proposition 3.61]{boumal}}]\label{prop:gradient-projection}
-  Let \( \mathcal{M} \) be a Riemannian submanifold of a finite-dimensional real vector space \( \mathcal{E} \) equipped with an inner product \( \langle \cdot, \cdot \rangle \), and let \( f : \mathcal{M} \rightarrow \mathbb{R} \) be smooth. Then the Riemannian gradient of \( f \) is given by
+  Let \( \mathcal{M} \) be a Riemannian submanifold of a finite-dimensional real vector space \( \mathcal{E} \) equipped with an inner product \( \langle \cdot, \cdot \rangle \), and let \( f : \mathcal{M} \rightarrow \mathbb{R} \) be smooth.
+  Then the Riemannian gradient of \( f \) is given by
   \[
-    \operatorname{grad} f(x) = \operatorname{Proj}_x\bigl(\nabla \bar{f}(x)\bigr), \qquad x \in \mathcal{M},
+    \grad f(x) = \Proj_x\bigl(\nabla \bar{f}(x)\bigr), \qquad x \in \mathcal{M},
   \]
   where \( \bar{f} \) is any smooth extension of \( f \) to an open neighbourhood of \( \mathcal{M} \) in \( \mathcal{E} \), and \( \nabla \bar{f}(x) \) is its Euclidean gradient.
 
@@ -386,20 +412,23 @@ To define gradients on these manifolds, we equip their tangent spaces with inner
   \]
 \end{proposition}
 
-A gradient gives a tangent direction at a point. Retractions allow us to use this direction to move on the manifold.
+A gradient gives a tangent direction at a point.
+Retractions allow us to use this direction to move on the manifold.
 
 \begin{definition}\label{def:retraction}
-  Let \( \mathcal{M} \) be a smooth manifold. The \textbf{tangent bundle} of \( \mathcal{M} \) is the set
+  Let \( \mathcal{M} \) be a smooth manifold.
+  The \textbf{tangent bundle} of \( \mathcal{M} \) is the set
   \[
     T\mathcal{M} = \{(x, v) : x \in \mathcal{M},\ v \in T_x\mathcal{M}\}.
   \]
-  It carries a natural smooth structure by \cite[Proposition E.1]{segal}. A \textbf{retraction} on \( \mathcal{M} \) is a smooth map
+  It carries a natural smooth structure by~\cite[Proposition E.1]{segal}. A \textbf{retraction} on \( \mathcal{M} \) is a smooth map
   \[
     R : T\mathcal{M} \rightarrow \mathcal{M} : (x, v) \mapsto R_x(v)
   \]
   such that, for every \( x \in \mathcal{M} \) and \( v \in T_x\mathcal{M} \), the curve \( c(t) = R_x(tv) \) satisfies \( c(0) = x \) and represents \( v \). 
   
-  For an embedded submanifold \( \mathcal{M} \subset \mathcal{E} \), we regard \( R \) as a map into \( \mathcal{E} \). It is smooth if it extends to a smooth map on an open neighbourhood of \( T\mathcal{M} \) in \( \mathcal{E} \times \mathcal{E} \).
+  For an embedded submanifold \( \mathcal{M} \subset \mathcal{E} \), we regard \( R \) as a map into \( \mathcal{E} \).
+  It is smooth if it extends to a smooth map on an open neighbourhood of \( T\mathcal{M} \) in \( \mathcal{E} \times \mathcal{E} \).
 
   A manifold may admit more than one retraction.
 
@@ -407,22 +436,80 @@ A gradient gives a tangent direction at a point. Retractions allow us to use thi
 \end{definition}
 
 \begin{definition}\label{def:submersion}
-  Let \( X, Y \) be smooth manifolds. A smooth function \( F : X \longrightarrow Y \) is a \textbf{submersion} if and only if
+  Let \( X, Y \) be smooth manifolds.
+  A smooth function \( F : X \longrightarrow Y \) is a \textbf{submersion} if
   \[
     \rank DF(x) = \dim Y \qquad \text{for every } x \in X.
   \]
-  Equivalently, \( DF(x) : T_xX \longrightarrow T_{F(x)}Y \) is surjective at every point, as in \cite[Definition 4.16 and Section 5.1]{segal}.
+  Equivalently, \( DF(x) : T_x X \longrightarrow T_{F(x)}Y \) is surjective at every point, as in~\cite[Definition 4.16 and Section 5.1]{segal}.
 \end{definition}
 
-
 \subsection{Examples}
+\begin{example}\label{ex:sphere}
+  First we will prove that \( S^n \) is a submanifold in \( \R^{n+1} \). Consider the smooth function:
+  \[
+    h:\R^{n+1} \longrightarrow \R \qquad h: (x_0, \dots, x_{n}) \mapsto (x_0^2 + \cdots + x_{n}^2).
+  \]
+  The derivative of \( h \) at a point \( (x_0, \dots, x_{n} ) \) is the 1-by-\( (n+1) \) matrix
+  \[
+    (2x_0, \dots, 2x_n) : \R^{n+1} \longrightarrow \R
+  \]
+  which is a surjection if at least one of the \( x_i \) is nonzero. 
+  Hence, the origin is the only critical point of \( h \), and \( 0 \in \R \) is the only critical value.
+  For \( \alpha > 0 \), the level set \( Z_\alpha = h^{-1}(\alpha) \) is a n-dimensional sphere of radius \( \sqrt{ \alpha } \).
+  So this sphere is a codimension-1 submanifold of \( \R^{n+1} \).
 
-\begin{example}
-% Write a simple motivating example here.
+  We can generalise this result, by considering level sets of functions that are only defined on open sets of \( \R^n \).
+  Take an open set \( U \subset \R^n \), and consider a smooth function
+  \[
+    h: U \longrightarrow \R^k
+  \]
+  Note, that \( U \) is an n-dimensional manifold. 
+  Because Proposition~\ref{thm:regular-value} was entirely local, it shows immediately that the level sets
+  \[
+    h^{-1}(\alpha) \subset U
+  \]
+  are submanifolds of \( U \), provided that \( \alpha \) is a regular value of \( h \).
 \end{example}
 
-\begin{example}
-% Write another example here if needed.
+\begin{example}\label{ex:sphere-tangent-space}
+  Consider the submanifold \( S^n \subset \R^{n+1} \). This is the level set of the function
+  \[
+    h: (x_0, \dots, x_{n}) \mapsto (x_0^2 + \cdots + x_{n}^2)
+  \]
+  at the regular value \( h = 1 \), as we saw in Example~\ref{ex:sphere}.
+  At a point \( x = (x_0, \dots, x_n) \in S^n \), the derivative of \( h \) is the 1-by-\( (n+1) \) matrix:
+  \[
+    (2x_0, \dots, 2x_n) : \R^{n+1} \longrightarrow \R
+  \]
+  So the tangent space to \( S^n \) at \( x \) is subspace:
+  \[
+    T_xS^{n} = \{ v \in \R^{n+1} : x \cdot v = 0 \} = x^\perp \subset \R^{n+1}.
+  \]
+\end{example}
+
+\begin{example}\label{ex:real-projective-space}
+  Let \(\R\mathbb{P}^n\) denote the n-dimensional real projective space (the set of lines in \( \R^{n+1} \)) and for a non-zero vector \( (x_0, \ldots x_n) \) we denote the corresponding line by \( x_0 : \cdots : x_n \).
+  For each \( i \in [0, n] \) we can get a pseudo-chart on \( \R\mathbb{P}^n \) by setting \( U_i = { x_0 : \ldots : x_n, x_i \ne 0} \) and:
+  \[
+    f_i ; U_i \longrightarrow \R^n 
+    \qquad (x_0 : \ldots : x_n) \mapsto \left( \dfrac{x_0}{x_i}, \dots, \dfrac{x_n}{x_i} \right)
+  \]
+  Note that this is a bijection, its inverse being given by:
+  \[
+    f_i^{-1} : (\tilde{x}_1, \dots, \tilde{x}_n) \mapsto (\tilde{x}_0 : \ldots : \tilde{x}_{i} : 1 : \tilde{x}_{i+1} : \ldots : \tilde{x}_n)
+  \]
+  If we take a pair of these charts \( (U_i, f_i) \) and \( (U_j, f_j) \), (with \( i < j \)) then the transition function is given by:
+  \[
+    \phi_{ji} : {\tilde{x_j} = 0} \xrightarrow{\sim} \R^n \ {\tilde{y_{i+1}} = 0}
+    \qquad (\tilde{x}_1, \dots, \tilde{x}_n) \mapsto \dfrac{1}{\tilde{x}_j} \left( \tilde{x}_1, \ldots, \tilde{x}_i, 1, \tilde{x}_{i+1}, \ldots, \tilde{x}_n \right)
+  \]
+  (where the \( \tilde{j} \) indicates that the ommitted component \( \dfrac{\tilde{x}_j}{\tilde{x}_j} \) )
+  This is the smooth function between open subsets of \( \R^n\).
+  By Corollary~\ref{cor:pseudo-atlas-smooth-structure} this gives \( \R\mathbb{P}^n \) the structure of a smooth manifold.
+
+  More generally, the set of \( k \)-dimensional subspaces of \( \R^{n+1} \) is the Grassmannian \( \mathrm{Gr}(k,n+1) \).
+  The real projective space \( \mathbb{RP}^n \) is the case \( k=1 \).
 \end{example}
 
 % --------------------------------------------------
@@ -505,7 +592,7 @@ A gradient gives a tangent direction at a point. Retractions allow us to use thi
 % For this project, this could be where you apply the construction
 % to a particular algebra or number system.
 
-\subsection{\texorpdfstring{$\mathrm{Gr}(2,4)$}{Gr(2,4)} in full}
+\subsection{\texorpdfstring{$\mathrm{Gr}(2,4)$}{Gr (2,4)} in full}
 
 % Write the first application here.
 
