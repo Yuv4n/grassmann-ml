@@ -122,9 +122,8 @@
 % Abstract
 % --------------------------------------------------
 \begin{abstract}
-% Write a short summary of your paper here.
-% State the topic, the aim of the project, the main ideas discussed,
-% and the conclusion reached.
+% Write last: state the optimisation question, the geometric constructions and the PCA conclusion.
+% Mention gradients and basis-independent polar updates; do not claim convergence or numerical results.
 \end{abstract}
 
 \tableofcontents
@@ -133,10 +132,9 @@
 % 1. Introduction
 % --------------------------------------------------
 \section{Introduction}\label{sec:intro}
-% Introduce the topic of the paper.
-% Explain the motivation.
-% State what the paper will investigate.
-% Give a short outline of the sections.
+% Write after the main argument. Introduce orthonormal matrices and subspaces as optimisation domains.
+% Explain what the paper proves and how those results justify future first-order updates.
+% Present the work as a mathematical exposition; give a short roadmap.
 
 % --------------------------------------------------
 % 2. Background / Preliminaries
@@ -145,26 +143,24 @@
 % Introduce the basic objects and notation needed for the paper.
 % This section should contain definitions before they are used later.
 
+This section introduces the smooth structures and differential calculus used to construct the Stiefel and Grassmann manifolds.
+
 \subsection{Basic Definitions}
+
+We follow Segal \cite[Sections 2--5]{segal} for smooth structures and differential calculus.
 
 \begin{definition}\label{def:co-ordinate-chart}
   Let \( X \) be a topological space. 
-  A \textbf{Co-ordinate Chart} on \( X \) is the pair \( (U, \varphi)\) where \( U \subset X \) is open, and \( \varphi \) is a homeomorphism 
+  A \textbf{co-ordinate chart} on \( X \) is the pair \( (U, \varphi)\) where \( U \subset X \) is open, and \( \varphi \) is a homeomorphism 
   \[
     \varphi: U \xlongrightarrow{\sim} \varphi(U)
   \]
-  where \( \varphi(U) \) is an open subset \( \varphi(U) \subset \R^n \), for some nonnegative integer \( n \).
+  where \( \varphi(U) \) is open in \( \R^n \), for some nonnegative integer \( n \).
 \end{definition}
 
 \begin{definition}\label{def:topological-manifold}
   Let \( X \) be a topological space, and fix a nonnegative integer \( n \).
-  \( X\) is an \textbf{n-dimensional topological manifold} if \( X\) is Hausdorff and second countable, and for any point \( x \in X \), there exists a co-ordinate chart,
-  \[
-    \varphi: U \xlongrightarrow{\sim} \varphi(U) \subset \R^n
-  \]
-  where \( x \in U \), and \( \varphi(U) \) is open in \( \R^n \). 
-
-  This is to say, that \( X \) is locally Euclidean, i.e. every point of \( X \) has an open neighbourhood homeomorphic to an open subset of \(\mathbb R^n\).
+  \( X \) is an \textbf{\( n \)-dimensional topological manifold} if it is Hausdorff and second countable, and every point lies in a co-ordinate chart with image open in \( \R^n \). This last condition says that \( X \) is locally Euclidean.
 
   We require that \( X \) is Hausdorff, and second countable, as to exclude certain pathological examples.
 \end{definition}
@@ -175,15 +171,7 @@
   \[
     \phi_{21} = \varphi_2 \circ \varphi_1^{-1} : \varphi_1(U \cap V) \xlongrightarrow{\sim} \varphi_2(U \cap V) 
   \]
-  Notice, it is automatically a homeomorphism, as it is the composition of two homeomorphisms.
-  
-  \smallskip
-  \noindent
-  
-  Its inverse is the transition function in the opposite direction:
-  \[
-    \phi_{21}^{-1} = \phi_{12} = \varphi_1 \circ \varphi_2^{-1} : \varphi_2(U \cap V) \xlongrightarrow{\sim} \varphi_1(U \cap V)
-  \]
+  It is a homeomorphism, with inverse \( \phi_{21}^{-1} = \phi_{12} = \varphi_1 \circ \varphi_2^{-1} \).
 \end{definition}
 
 \begin{definition}\label{def:atlas}
@@ -197,19 +185,12 @@
   \bigcup_{i \in I}U_i = X    
   \]
   
-  An atlas is a \textbf{smooth atlas} if for any two co-ordinate charts in the atlas, the transition function
-  \[
-    \phi_{ji} = \varphi_j \circ \varphi_i^{-1} : \varphi_i(U_i \cap U_j) \xlongrightarrow{\sim} \varphi_j(U_i \cap U_j), \qquad i,j \in I
-  \]
-  is a smooth function, i.e. it is infinitely differentiable.
+  An atlas is a \textbf{smooth atlas} if all its transition functions are smooth, i.e. infinitely differentiable.
 \end{definition}
 
 \begin{definition}\label{def:compatible-atlases}
-  Let \( X \) be a topological manifold, and let
-  \[
-    \mathcal{A} = \{(U_i, \varphi_i); i \in I\}
-  \]
-  be a smooth atlas on \( X \). Let \( (U, \varphi) \) be any co-ordinate chart on \( X \).
+  Let \( X \) be a topological manifold, and let \( \mathcal{A} = \{(U_i, \varphi_i); i \in I\} \) be a smooth atlas on \( X \). 
+  Let \( (U, \varphi) \) be any co-ordinate chart on \( X \).
   The chart \( (U, \varphi) \) is \textbf{compatible} with the atlas \( \mathcal{A} \) if the transition functions between \( (U, \varphi) \) and any chart in \( \mathcal{A} \) are diffeomorphisms, i.e. they are smooth functions with smooth inverses.
 
   In other words, the new chart \( (U, \varphi) \) is compatible with the atlas \( \mathcal{A} \) if the union \( \mathcal{A} \cup \{(U, \varphi)\} \) is still a smooth atlas.
@@ -232,13 +213,9 @@
 \end{definition}
 
 \begin{definition}\label{def:smooth-map}
-  Let \( X, Y \) be smooth manifolds, of dimension \( m \) and \( n \) respectively, and let 
-  \[
-    H: X \longrightarrow Y
-  \]
-  be a continuous function.
+  Let \( X, Y \) be smooth manifolds, of dimension \( m \) and \( n \) respectively, and let \( H : X \longrightarrow Y \) be a continuous function.
   Fix a point \( x \in X \).
-  \( H \) is \textbf{smooth at \( x \)} ifthere exists a chart \((U,\varphi)\) compatible with the smooth structure on \(X\), with \(x \in U\), and a chart \((V,\psi)\) compatible with the smooth structure on \(Y\), with \(H(U) \subset V\), such that the composition
+  \( H \) is \textbf{smooth at \( x \)} if there exists a chart \((U,\varphi)\) compatible with the smooth structure on \(X\), with \(x \in U\), and a chart \((V,\psi)\) compatible with the smooth structure on \(Y\), with \(H(U) \subset V\), such that the composition
   \[
     \psi \circ H \circ \varphi^{-1} : \varphi(U) \longrightarrow \psi(V)
   \]
@@ -248,14 +225,8 @@
 \end{definition}
 
 \begin{definition}\label{def:diffeomorphism}
-  Let \(X, Y \) be smooth manifolds. 
-  A function 
-  \[
-    H: X \longrightarrow Y
-  \]
-  is a \textbf{diffeomorphism} if \( H \) is a bijection, and both \( H \) and \( H^{-1} \) are smooth.
-
-  If there exists a diffeomorphism between \( X \) and \( Y \), they are \textbf{diffeomorphic}.
+  Let \( X, Y \) be smooth manifolds. A function \( H : X \longrightarrow Y \) is a \textbf{diffeomorphism} if it is a bijection and both \( H \) and \( H^{-1} \) are smooth.
+  If such a function exists, \( X \) and \( Y \) are \textbf{diffeomorphic}.
 \end{definition}
 
 \begin{definition}\label{def:pseudo-chart}
@@ -274,10 +245,14 @@
 \end{definition}
 
 \begin{proposition}[{\cite[Proposition 2.26]{segal}}]\label{prop:pseudo-atlas-topology}
-  Let \( X \) be a set, and let \( \mathcal{A} = \{ (U_i,\varphi_i) : i \in I \} \) wherebe a pseudo-atlas for \( X \). Suppose that for any pair \( (U_1, \varphi_1), (U_2, \varphi_2) \) of pseudo-charts in \( \mathcal{A} \), we have that:
+  Let \( X \) be a set, and let \( \mathcal{A} = \{ (U_i,\varphi_i) : i \in I \} \) be a pseudo-atlas for \( X \). Suppose that for any pair \( (U_1, \varphi_1), (U_2, \varphi_2) \) of pseudo-charts in \( \mathcal{A} \), we have that:
   \begin{enumerate}
     \item both \( \varphi_1(U_1 \cap U_2) \subset \varphi_1(U_1) \) and \( \varphi_2(U_1 \cap U_2) \subset \varphi_2(U_2) \) are open subsets, and
-    \item the transition function is continuous. 
+    \item the transition function
+    \[
+      \phi_{21} = \varphi_2 \circ \varphi_1^{-1} : \varphi_1(U_1 \cap U_2) \longrightarrow \varphi_2(U_1 \cap U_2)
+    \]
+    is continuous. 
   \end{enumerate}
   Then there exists a unique topology on \( X \) such that each pseudo-chart \( (U_i, \varphi_i) \) is a co-ordinate chart on \( X \).
 \end{proposition}
@@ -288,7 +263,7 @@
 
 \begin{definition}\label{def:embedded-submanifold}
   Let \( X \) be a smooth manifold of dimension \( n \), let \( m \) be an integer satisfying \( 0 \leq m \leq n \), and let \( \mathcal{M} \subset X \).
-  The subset \( \mathcal{M} \) is an \textbf{m-dimensional submanifold} of \( X \) if, for every \( x \in \mathcal{M} \), there exists a compatible co-ordinate chart
+  The subset \( \mathcal{M} \) is an \textbf{\( m \)-dimensional submanifold} of \( X \) if, for every \( x \in \mathcal{M} \), there exists a compatible co-ordinate chart
   \[
     \varphi : U \xlongrightarrow{\sim} \varphi(U) \subset \R^n
   \]
@@ -300,7 +275,7 @@
 \end{definition}
 
 By~\cite[Proposition 3.7]{segal}, \( \mathcal{M} \), with the subspace topology, carries a smooth structure induced from \( X \).
-We always equip a submanifold with this structure.
+We always equip a submanifold with this structure. By \cite[Lemmas 4.7--4.8]{segal}, the inclusion \( \iota : \mathcal{M} \hookrightarrow X \) is smooth, and a map \( F : Y \longrightarrow \mathcal{M} \) from a smooth manifold is smooth if and only if \( \iota \circ F \) is smooth. Smooth maps on an ambient manifold therefore restrict to smooth maps on its submanifolds; in particular, a map admitting smooth local ambient extensions is smooth.
 
 \begin{definition}\label{def:tangent-space}
   Let \( \mathcal{M} \) be a smooth manifold, and let \( x \in \mathcal{M} \). A curve through \( x \) is a smooth function \( c : I \longrightarrow \mathcal{M} \), where \( I \) is an open interval containing \( 0 \) and \( c(0) = x \).
@@ -341,6 +316,11 @@ If \( \mathcal{M} \) is open in \( \mathcal{E} \), then \( T_x\mathcal{M} = \mat
   This map is well-defined and linear by~\cite[Proposition 5.10]{segal}.
 \end{definition}
 
+For smooth maps \( F : X \longrightarrow Y \) and \( G : Y \longrightarrow Z \), this definition gives the chain rule
+\[
+  D(G \circ F)(x) = DG(F(x)) \circ DF(x).
+\]
+
 \begin{theorem}[Regular level sets {\cite[Proposition 3.16 and Lemma 5.13]{segal}}]\label{thm:regular-value}
   Let \( \mathcal{E} \) and \( \mathcal{E'} \) be finite-dimensional real vector spaces, and let \( F : \mathcal{E} \rightarrow \mathcal{E'} \) be smooth.
   A point \( c \in \mathcal{E'} \) is called a regular value of \( F \) if \( DF(x) \) is surjective for every \( x \in F^{-1}(c) \).
@@ -351,7 +331,7 @@ If \( \mathcal{M} \) is open in \( \mathcal{E} \), then \( T_x\mathcal{M} = \mat
   \]
 \end{theorem}
 
-To define gradients on these manifolds, we equip their tangent spaces with inner products.
+To define gradients on these manifolds, we equip their tangent spaces with inner products. For the following metric and gradient definitions, we follow \cite[Definitions 3.51--3.55, 3.58 and 3.60]{boumal}, expressing smoothness of the metric in co-ordinates.
 
 \begin{definition}\label{def:riemannian-manifold}
   Let \( \mathcal{M} \) be a smooth manifold. A \textbf{Riemannian metric} on \( \mathcal{M} \) assigns an inner product \( \langle \cdot, \cdot \rangle_x \) to each tangent space \( T_x\mathcal{M} \), varying smoothly with \( x \).
@@ -387,19 +367,18 @@ To define gradients on these manifolds, we equip their tangent spaces with inner
 \end{definition}
 
 \begin{definition}\label{def:orthogonal-projector}
-  Let \( \mathcal{M} \) be an embedded submanifold of a finite-dimensional real vector space \( \mathcal{E} \) equipped with an inner product \( \langle \cdot, \cdot \rangle \), and let \( x \in \mathcal{M} \).
+  Let \( \mathcal{M} \subset \mathcal{E} \) be an embedded submanifold, where \( \mathcal{E} \) is a finite-dimensional real inner product space, and let \( x \in \mathcal{M} \).
   The \textbf{orthogonal projector} to \( T_x\mathcal{M} \) is the linear map \( \Proj_x : \mathcal{E} \rightarrow \mathcal{E} \) characterized by the following properties:
   \begin{enumerate}
     \item Range: \( \im(\Proj_x) = T_x\mathcal{M} \).
     \item Projector: \( \Proj_x \circ \Proj_x = \Proj_x \).
     \item Orthogonal: \( \langle u - \Proj_x(u), v \rangle = 0 \quad \text{for every } v \in T_x\mathcal{M} \text{ and } u \in \mathcal{E} \).
   \end{enumerate}
-  For an open submanifold, \( \Proj_x \) is the identity because \( T_x\mathcal{M} = \mathcal{E} \).
 \end{definition}
 
 
 \begin{proposition}[{\cite[Proposition 3.61]{boumal}}]\label{prop:gradient-projection}
-  Let \( \mathcal{M} \) be a Riemannian submanifold of a finite-dimensional real vector space \( \mathcal{E} \) equipped with an inner product \( \langle \cdot, \cdot \rangle \), and let \( f : \mathcal{M} \rightarrow \mathbb{R} \) be smooth.
+  Let \( \mathcal{M} \subset \mathcal{E} \) be a Riemannian submanifold, and let \( f : \mathcal{M} \rightarrow \mathbb{R} \) be smooth.
   Then the Riemannian gradient of \( f \) is given by
   \[
     \grad f(x) = \Proj_x\bigl(\nabla \bar{f}(x)\bigr), \qquad x \in \mathcal{M},
@@ -421,19 +400,20 @@ Retractions allow us to use this direction to move on the manifold.
   \[
     T\mathcal{M} = \{(x, v) : x \in \mathcal{M},\ v \in T_x\mathcal{M}\}.
   \]
-  It carries a natural smooth structure by~\cite[Proposition E.1]{segal}. A \textbf{retraction} on \( \mathcal{M} \) is a smooth map
+  It carries a natural smooth structure by~\cite[Proposition E.1]{segal}. Following \cite[Definition 3.47]{boumal}, a \textbf{retraction} on \( \mathcal{M} \) is a smooth map
   \[
     R : T\mathcal{M} \rightarrow \mathcal{M} : (x, v) \mapsto R_x(v)
   \]
   such that, for every \( x \in \mathcal{M} \) and \( v \in T_x\mathcal{M} \), the curve \( c(t) = R_x(tv) \) satisfies \( c(0) = x \) and represents \( v \). 
   
   For an embedded submanifold \( \mathcal{M} \subset \mathcal{E} \), we regard \( R \) as a map into \( \mathcal{E} \).
-  It is smooth if it extends to a smooth map on an open neighbourhood of \( T\mathcal{M} \) in \( \mathcal{E} \times \mathcal{E} \).
+  It is smooth if and only if it extends to a smooth map on an open neighbourhood of \( T\mathcal{M} \) in \( \mathcal{E} \times \mathcal{E} \).
 
-  A manifold may admit more than one retraction.
-
-  Intuitively, a retraction provides a way to move from a point on the manifold along a tangent vector while staying on the manifold.
 \end{definition}
+
+
+We will also need to determine when the derivative of a smooth map is surjective.
+
 
 \begin{definition}\label{def:submersion}
   Let \( X, Y \) be smooth manifolds.
@@ -445,188 +425,413 @@ Retractions allow us to use this direction to move on the manifold.
 \end{definition}
 
 \subsection{Examples}
-\begin{example}\label{ex:sphere}
-  First we will prove that \( S^n \) is a submanifold in \( \R^{n+1} \). Consider the smooth function:
+\begin{example}[Sphere]\label{ex:sphere}\label{ex:sphere-tangent-space}
+  Following \cite[Examples 3.19 and 5.14]{segal}, consider the smooth function
   \[
-    h:\R^{n+1} \longrightarrow \R \qquad h: (x_0, \dots, x_{n}) \mapsto (x_0^2 + \cdots + x_{n}^2).
+    h : \R^{n+1} \longrightarrow \R, \qquad (x_0, \dots, x_n) \mapsto x_0^2 + \cdots + x_n^2.
   \]
-  The derivative of \( h \) at a point \( (x_0, \dots, x_{n} ) \) is the 1-by-\( (n+1) \) matrix
+  The unit sphere is \( S^n = h^{-1}(1) \). The derivative of \( h \) at \( x = (x_0, \dots, x_n) \) is the 1-by-\( (n+1) \) matrix
   \[
-    (2x_0, \dots, 2x_n) : \R^{n+1} \longrightarrow \R
+    Dh(x) = (2x_0, \dots, 2x_n) : \R^{n+1} \longrightarrow \R,
   \]
-  which is a surjection if at least one of the \( x_i \) is nonzero. 
-  Hence, the origin is the only critical point of \( h \), and \( 0 \in \R \) is the only critical value.
-  For \( \alpha > 0 \), the level set \( Z_\alpha = h^{-1}(\alpha) \) is a n-dimensional sphere of radius \( \sqrt{ \alpha } \).
-  So this sphere is a codimension-1 submanifold of \( \R^{n+1} \).
+  which is surjective if at least one of the \( x_i \) is nonzero. Every point of \( S^n \) is nonzero, so \( 1 \) is a regular value of \( h \). By \cref{thm:regular-value}, \( S^n \) is an \( n \)-dimensional embedded submanifold of \( \R^{n+1} \).
 
-  We can generalise this result, by considering level sets of functions that are only defined on open sets of \( \R^n \).
-  Take an open set \( U \subset \R^n \), and consider a smooth function
+  The same theorem gives its tangent space at \( x \in S^n \):
   \[
-    h: U \longrightarrow \R^k
-  \]
-  Note, that \( U \) is an n-dimensional manifold. 
-  Because Proposition~\ref{thm:regular-value} was entirely local, it shows immediately that the level sets
-  \[
-    h^{-1}(\alpha) \subset U
-  \]
-  are submanifolds of \( U \), provided that \( \alpha \) is a regular value of \( h \).
-\end{example}
-
-\begin{example}\label{ex:sphere-tangent-space}
-  Consider the submanifold \( S^n \subset \R^{n+1} \). This is the level set of the function
-  \[
-    h: (x_0, \dots, x_{n}) \mapsto (x_0^2 + \cdots + x_{n}^2)
-  \]
-  at the regular value \( h = 1 \), as we saw in Example~\ref{ex:sphere}.
-  At a point \( x = (x_0, \dots, x_n) \in S^n \), the derivative of \( h \) is the 1-by-\( (n+1) \) matrix:
-  \[
-    (2x_0, \dots, 2x_n) : \R^{n+1} \longrightarrow \R
-  \]
-  So the tangent space to \( S^n \) at \( x \) is subspace:
-  \[
-    T_xS^{n} = \{ v \in \R^{n+1} : x \cdot v = 0 \} = x^\perp \subset \R^{n+1}.
+    T_xS^n = \ker Dh(x) = \{v \in \R^{n+1} : x \cdot v = 0\} = x^\perp.
   \]
 \end{example}
 
-\begin{example}\label{ex:real-projective-space}
-  Let \(\R\mathbb{P}^n\) denote the n-dimensional real projective space (the set of lines in \( \R^{n+1} \)) and for a non-zero vector \( (x_0, \ldots x_n) \) we denote the corresponding line by \( x_0 : \cdots : x_n \).
-  For each \( i \in [0, n] \) we can get a pseudo-chart on \( \R\mathbb{P}^n \) by setting \( U_i = { x_0 : \ldots : x_n, x_i \ne 0} \) and:
+\begin{example}[Real projective space]\label{ex:real-projective-space}
+  Following \cite[Example 2.30]{segal}, let \( \mathbb{RP}^n \) denote the set of lines through the origin in \( \R^{n+1} \). For a nonzero vector \( x = (x_0, \dots, x_n) \), we denote the corresponding line by \( [x] = x_0 : \cdots : x_n \).
+  For each \( i \in \{0, \dots, n\} \), set
   \[
-    f_i ; U_i \longrightarrow \R^n 
-    \qquad (x_0 : \ldots : x_n) \mapsto \left( \dfrac{x_0}{x_i}, \dots, \dfrac{x_n}{x_i} \right)
+    U_i = \{x_0 : \cdots : x_n : x_i \ne 0\}.
   \]
-  Note that this is a bijection, its inverse being given by:
+  These sets cover \( \mathbb{RP}^n \), since every nonzero vector has a nonzero component. Define
   \[
-    f_i^{-1} : (\tilde{x}_1, \dots, \tilde{x}_n) \mapsto (\tilde{x}_0 : \ldots : \tilde{x}_{i} : 1 : \tilde{x}_{i+1} : \ldots : \tilde{x}_n)
+    f_i : U_i \longrightarrow \R^n, \qquad
+    (x_0 : \cdots : x_n) \mapsto
+    \left(\frac{x_0}{x_i}, \dots, \frac{x_{i-1}}{x_i}, \frac{x_{i+1}}{x_i}, \dots, \frac{x_n}{x_i}\right).
   \]
-  If we take a pair of these charts \( (U_i, f_i) \) and \( (U_j, f_j) \), (with \( i < j \)) then the transition function is given by:
+  The ratios are unchanged when \( x \) is multiplied by a nonzero scalar, so \( f_i \) is well-defined. It is a bijection, with inverse
   \[
-    \phi_{ji} : {\tilde{x_j} = 0} \xrightarrow{\sim} \R^n \ {\tilde{y_{i+1}} = 0}
-    \qquad (\tilde{x}_1, \dots, \tilde{x}_n) \mapsto \dfrac{1}{\tilde{x}_j} \left( \tilde{x}_1, \ldots, \tilde{x}_i, 1, \tilde{x}_{i+1}, \ldots, \tilde{x}_n \right)
+    f_i^{-1} : (\tilde{x}_1, \dots, \tilde{x}_n) \mapsto
+    \tilde{x}_1 : \cdots : \tilde{x}_i : 1 : \tilde{x}_{i+1} : \cdots : \tilde{x}_n.
   \]
-  (where the \( \tilde{j} \) indicates that the ommitted component \( \dfrac{\tilde{x}_j}{\tilde{x}_j} \) )
-  This is the smooth function between open subsets of \( \R^n\).
-  By Corollary~\ref{cor:pseudo-atlas-smooth-structure} this gives \( \R\mathbb{P}^n \) the structure of a smooth manifold.
+  Write \( z_i(\tilde{x}) \in \R^{n+1} \) for the vector obtained by inserting \( 1 \) into coordinate \( i \), with coordinates indexed from \( 0 \) to \( n \). Thus \( f_i^{-1}(\tilde{x}) = [z_i(\tilde{x})] \).
 
-  More generally, the set of \( k \)-dimensional subspaces of \( \R^{n+1} \) is the Grassmannian \( \mathrm{Gr}(k,n+1) \).
-  The real projective space \( \mathbb{RP}^n \) is the case \( k=1 \).
+  For any \( i,j \), the overlap image is
+  \[
+    f_i(U_i \cap U_j) = \{\tilde{x} \in \R^n : (z_i(\tilde{x}))_j \ne 0\},
+  \]
+  which is open. On this set, the transition function is
+  \[
+    (f_j \circ f_i^{-1})(\tilde{x})
+    = \left(\frac{(z_i(\tilde{x}))_r}{(z_i(\tilde{x}))_j}\right)_{r\ne j},
+  \]
+  with components ordered by \( r \in \{0,\dots,n\} \). Each transition is smooth because its denominator is nonzero on the overlap. By \cref{prop:pseudo-atlas-topology}, these pseudo-charts determine a unique topology in which they are co-ordinate charts.
+
+  To check Hausdorffness, consider
+  \[
+    P : \mathbb{RP}^n \longrightarrow \Sym(n+1), \qquad
+    [x] \longmapsto \frac{xx^\top}{\|x\|^2},
+  \]
+  where \( \Sym(n+1) \) is the vector space of real symmetric \( (n+1) \)-by-\( (n+1) \) matrices. This map is well-defined because scaling \( x \) does not change the quotient. It is injective because the image of the matrix \( P([x]) \) is the line \( [x] \). In the chart \( U_i \),
+  \[
+    (P \circ f_i^{-1})(\tilde{x})
+    = \frac{z_i(\tilde{x})z_i(\tilde{x})^\top}{1+\|\tilde{x}\|^2},
+  \]
+  which is continuous. Thus \( P \) is a continuous injection into the Hausdorff space \( \Sym(n+1) \), so \( \mathbb{RP}^n \) is Hausdorff.
+
+  Each \( U_i \) has a countable basis transported from \( \R^n \). Since the \( U_i \) form a finite open cover, the union of these bases is a countable basis for \( \mathbb{RP}^n \). By \cref{cor:pseudo-atlas-smooth-structure}, the charts therefore give \( \mathbb{RP}^n \) the structure of a smooth manifold of dimension \( n \).
+
+  More generally, the set of \( k \)-dimensional subspaces of \( \R^{n+1} \) is the Grassmannian \( \mathrm{Gr}(k,n+1) \). Real projective space \( \mathbb{RP}^n \) is the case \( k=1 \).
 \end{example}
 
-% --------------------------------------------------
-% 3. Motivation
-% --------------------------------------------------
-\section{Motivation}
+\section{Motivation}\label{sec:motivation}
 
-% Explain why the topic is important.
-% Include examples that show why the main construction or theorem is needed.
-% This is a good place to compare a simple case with a more interesting case.
+% Introduce maximising tr(X^T A X), with A symmetric and X^T X = I_k.
+% Explain captured variance when A is a covariance matrix. Verify the exact Boumal PCA reference before citing.
+% Show invariance under X -> XQ, Q in O(k), and distinguish an orthonormal basis from its span.
+% Pose the questions of admissible directions, feasible steps and independence from the chosen basis.
 
-% --------------------------------------------------
-% 4. The Stiefel Manifold
-% --------------------------------------------------
 \section{The Stiefel Manifold}\label{sec:stiefel}
 
-% Introduce the main construction or method used in the paper.
-% Define all notation carefully.
+% Explain how the constraint gives a manifold with computable gradients and feasible updates.
+% Use Boumal Section 7.3 as supplementary guidance; develop the proofs here.
 
-\begin{definition}
-% Define the main construction here.
+\begin{convention}[Matrix conventions]\label{conv:matrix-conventions}
+  % Fix 1 <= k <= n; use n-by-k matrices with column bases.
+  % Define the Frobenius inner product, Sym(k), sym(B), and the induced Stiefel metric.
+\end{convention}
+
+\begin{definition}[Stiefel manifold]\label{def:stiefel}
+  % Define St(n,k) = {X in R^(n-by-k) : X^T X = I_k}.
 \end{definition}
 
-\begin{remark}
-% Add any important comments about notation, conventions, or assumptions.
-\end{remark}
-
-% --------------------------------------------------
-% 5. The Grassmann Manifold
-% --------------------------------------------------
-\section{The Grassmann Manifold}\label{sec:grassmann}
-
-% State and explain the key properties of the objects being studied.
-
-\begin{lemma}
-% State a useful lemma here.
-\end{lemma}
-
-\begin{proof}
-% Write the proof here.
-\end{proof}
-
-\begin{proposition}
-% State a proposition here.
-\end{proposition}
-
-\begin{proof}
-% Write the proof here.
-\end{proof}
-
-% --------------------------------------------------
-% 6. From Stiefel to Grassmann
-% --------------------------------------------------
-\section{From Stiefel to Grassmann}\label{sec:quotient}
-
-% This section should contain the central results of the paper.
-
-\begin{theorem}
-% State the main theorem here.
+\begin{theorem}[Smooth structure]\label{thm:stiefel-manifold}
+  % State the embedded manifold result and dimension nk - k(k+1)/2.
 \end{theorem}
 
 \begin{proof}
-% Write the proof of the main theorem here.
+  % Use F(X)=X^T X with target Sym(k) and compute DF(X)[V].
+  % For a symmetric S, use V=XS/2 to prove surjectivity at X in St(n,k).
+  % Apply \cref{thm:regular-value}.
 \end{proof}
 
-\begin{corollary}
-% State a consequence of the main theorem here.
+\begin{proposition}[Compactness]\label{prop:stiefel-compact}
+  % State compactness and the existence of extrema for continuous objectives.
+\end{proposition}
+
+\begin{proof}
+  % Show closedness and boundedness; the squared Frobenius norm is k.
+\end{proof}
+
+\begin{proposition}[Tangent and normal spaces]\label{prop:stiefel-tangent-normal}
+  % State T_X St(n,k) = {V : X^T V + V^T X = 0}.
+  % Define the normal space as its Frobenius-orthogonal complement and identify it as {XS : S symmetric}.
+\end{proposition}
+
+\begin{proof}
+  % Use the derivative kernel for the tangent space; establish the normal space by orthogonality and dimension.
+\end{proof}
+
+\begin{proposition}[Tangent projection]\label{prop:stiefel-projection}
+  % State Proj_X(Z) = Z - X sym(X^T Z).
+\end{proposition}
+
+\begin{proof}
+  % Verify tangency of the projection and normality of the difference.
+\end{proof}
+
+\begin{corollary}[Riemannian gradient]\label{cor:stiefel-gradient}
+  % Derive the gradient formula from \cref{prop:gradient-projection}.
+  % For f(X)=tr(X^T A X), derive grad f(X)=2(I-XX^T)AX.
 \end{corollary}
 
 \begin{proof}
-% Write the proof here, or explain why it follows from the theorem.
+  % Use the ambient gradient and the tangent projection.
 \end{proof}
 
-% --------------------------------------------------
-% 7. Worked Example: Gr(2,4)
-% --------------------------------------------------
+\begin{lemma}[Smooth matrix square roots]\label{lem:smooth-matrix-square-root}
+  % State smoothness of the positive-definite square root and inverse square root.
+\end{lemma}
+
+\begin{proof}
+  % Use the spectral theorem for existence and uniqueness.
+  % Show the derivative H -> SH+HS of S -> S^2 on Sym(k) is invertible for positive-definite S.
+  % Apply Segal Theorem 3.9; use smooth inversion for the inverse square root.
+\end{proof}
+
+\begin{proposition}[Polar retraction]\label{prop:stiefel-polar-retraction}
+  % State R_X(V)=(X+V)(I_k+V^T V)^(-1/2) for tangent V.
+\end{proposition}
+
+\begin{proof}
+  % Use \cref{lem:smooth-matrix-square-root} for smoothness.
+  % Check feasibility and the value and derivative of R_X(tV) at t=0.
+\end{proof}
+
+% Optional closing observation: St(n,1)=S^(n-1) and St(n,n)=O(n).
+
+\section{The Grassmann Manifold}\label{sec:grassmann}
+
+% Construct the manifold through charts, following Segal Example 2.31 with column conventions.
+% Use the projector map to establish Hausdorffness before invoking the smooth-structure corollary.
+
+\begin{definition}[Grassmann manifold as a set]\label{def:grassmann}
+  % Define Gr(k,n) as the set of k-dimensional subspaces; represent S by col(Y) for full-rank Y.
+\end{definition}
+
+\begin{lemma}[Change of basis]\label{lem:grassmann-change-basis}
+  % State col(Y)=col(Y') if and only if Y'=YG for some G in GL_k.
+\end{lemma}
+
+\begin{proof}
+  % Express the columns of either basis in the other.
+\end{proof}
+
+\begin{definition}[Grassmann pseudo-charts]\label{def:grassmann-charts}
+  % Define row index sets I, the row minor Y_I, and U_I.
+  % Explain basis independence using \cref{lem:grassmann-change-basis}.
+  % Define phi_I using the rows I^c of Y Y_I^(-1).
+\end{definition}
+
+\begin{lemma}[Chart inverses and covering]\label{lem:grassmann-chart-cover}
+  % State bijectivity onto R^((n-k)-by-k) and that the U_I cover.
+\end{lemma}
+
+\begin{proof}
+  % Construct Y_B with identity rows in I and B in I^c.
+  % Use a nonzero k-by-k minor for coverage.
+\end{proof}
+
+\begin{lemma}[Smooth transitions]\label{lem:grassmann-transitions}
+  % State the overlap condition det((Y_B)_J) != 0 and the transition formula.
+\end{lemma}
+
+\begin{proof}
+  % Check openness and smoothness using matrix inversion on invertible matrices.
+\end{proof}
+
+\begin{proposition}[Topology from the pseudo-atlas]\label{prop:grassmann-topology}
+  % Apply \cref{prop:pseudo-atlas-topology} to obtain the unique chart topology.
+  % Reserve the smooth manifold conclusion until Hausdorffness and second countability are established.
+\end{proposition}
+
+\begin{proof}
+  % Verify the hypotheses using the preceding lemmas.
+\end{proof}
+
+\begin{proposition}[Projector representation]\label{prop:grassmann-projector}
+  % Define P(S)=Y(Y^T Y)^(-1)Y^T and show it is well-defined, injective and continuous.
+  % For an orthonormal basis X, record P(S)=XX^T.
+\end{proposition}
+
+\begin{proof}
+  % Verify invariance under Y -> YG and identify the image of P(S) with S.
+  % Check continuity in the pseudo-atlas charts.
+\end{proof}
+
+\begin{theorem}[Smooth structure and dimension]\label{thm:grassmann-manifold}
+  % Conclude that Gr(k,n) is a smooth manifold of dimension k(n-k), and that P is smooth.
+\end{theorem}
+
+\begin{proof}
+  % Use the continuous injection P for Hausdorffness and the finite open chart cover for second countability.
+  % Apply \cref{cor:pseudo-atlas-smooth-structure}; then check smoothness of P in charts.
+\end{proof}
+
+\section{From Stiefel to Grassmann}\label{sec:quotient}
+
+% Explain how subspace geometry can be computed using orthonormal representatives.
+% Supplementary source: Boumal Chapter 9, especially Section 9.16.
+
+\begin{definition}[Column-space map]\label{def:column-space-map}
+  % Define pi: St(n,k) -> Gr(k,n), X -> col(X).
+\end{definition}
+
+\begin{proposition}[Smoothness and fibres]\label{prop:column-space-map}
+  % State smoothness, surjectivity, and pi(X)=pi(X') iff X'=XQ with Q in O(k).
+\end{proposition}
+
+\begin{proof}
+  % Use the Grassmann charts and orthonormal bases; identify the change-of-basis matrix.
+\end{proof}
+
+\begin{lemma}[Local sections]\label{lem:grassmann-local-sections}
+  % Define s_I(B)=Y_B(Y_B^T Y_B)^(-1/2) and state pi composed with s_I = phi_I^(-1).
+\end{lemma}
+
+\begin{proof}
+  % Use \cref{lem:smooth-matrix-square-root} and verify the section identity.
+\end{proof}
+
+\begin{theorem}[Submersion and quotient]\label{thm:grassmann-quotient}
+  % State that pi is a surjective submersion, Gr(k,n) is compact, and St(n,k)/O(k) is homeomorphic to Gr(k,n).
+  % Specify the quotient topology.
+\end{theorem}
+
+\begin{proof}
+  % Differentiate the section identity to prove surjectivity at section representatives.
+  % Transfer to every X=s_I(B)Q using right multiplication and pi(XQ)=pi(X).
+  % Use compactness and Hausdorffness for the quotient homeomorphism.
+\end{proof}
+
+\begin{proposition}[Vertical and horizontal spaces]\label{prop:grassmann-horizontal}
+  % Identify ker Dpi(X)={X Omega : Omega^T=-Omega} and H_X={V : X^T V=0}.
+  % Show Dpi(X) restricted to H_X is an isomorphism.
+\end{proposition}
+
+\begin{proof}
+  % Use the curves X exp(t Omega), dimensions and Frobenius orthogonality.
+\end{proof}
+
+\begin{definition}[Horizontal lift]\label{def:horizontal-lift}
+  % Define lift_X as the inverse of Dpi(X) restricted to H_X.
+\end{definition}
+
+\begin{proposition}[Change of representative]\label{prop:horizontal-equivariance}
+  % State H_XQ=H_X Q and lift_XQ(xi)=lift_X(xi)Q; corresponding lifts have the same inner product.
+\end{proposition}
+
+\begin{proof}
+  % Differentiate invariance of pi and use uniqueness of horizontal lifts and Frobenius invariance.
+\end{proof}
+
+\begin{definition}[Grassmann metric]\label{def:grassmann-metric}
+  % Define the metric by the inner products of horizontal lifts.
+\end{definition}
+
+\begin{proposition}[Well-defined smooth metric]\label{prop:grassmann-metric}
+  % Establish representative independence and smoothness; explain the resulting Riemannian submersion.
+\end{proposition}
+
+\begin{proof}
+  % Use \cref{prop:horizontal-equivariance} and local sections.
+  % Justify smooth dependence of the inverse restricted derivatives and horizontal lifts.
+\end{proof}
+
+\begin{theorem}[Invariant objectives and gradients]\label{thm:grassmann-gradient}
+  % Prove that invariant smooth f on Stiefel descends to unique smooth ftilde on Grassmann.
+  % State lift_X(grad ftilde)=grad f(X)=(I-XX^T) nabla fbar(X).
+\end{theorem}
+
+\begin{proof}
+  % Use local sections for smooth descent and invariance to show the gradient is horizontal.
+  % Identify the gradient through the metric and chain rule.
+\end{proof}
+
+\begin{lemma}[Polar equivariance]\label{lem:polar-equivariance}
+  % State R_XQ(VQ)=R_X(V)Q.
+\end{lemma}
+
+\begin{proof}
+  % Use orthogonal conjugation of the positive-definite inverse square root.
+\end{proof}
+
+\begin{theorem}[Grassmann polar retraction]\label{thm:grassmann-retraction}
+  % Define Rcal_S(xi)=pi(R_X(lift_X(xi))) and prove that it is a retraction.
+\end{theorem}
+
+\begin{proof}
+  % Prove representative independence using \cref{lem:polar-equivariance}.
+  % Use local sections and smooth lifts for smoothness; use the chain rule for the first-order property.
+  % Supplementary guidance: Boumal Theorem 9.33 and Example 9.34.
+\end{proof}
+
+\begin{corollary}[Basis-independent updates]\label{cor:basis-independent-update}
+  % For an invariant objective and the same scalar step size, changing X to XQ leaves the updated subspace unchanged.
+\end{corollary}
+
+\begin{proof}
+  % Combine gradient transformation with polar equivariance.
+\end{proof}
+
+% Optional remark: critical representatives form O(k)-orbits; this describes redundancy, not a speed guarantee.
+
 \section{Applications}\label{sec:example}
 
-% Apply the theory to a specific example.
-% For this project, this could be where you apply the construction
-% to a particular algebra or number system.
+% Connect the geometry to local improvement, then characterise the global PCA optimum.
 
-\subsection{\texorpdfstring{$\mathrm{Gr}(2,4)$}{Gr (2,4)} in full}
+\subsection{Gradient steps on the manifold}\label{sec:gradient-steps}
 
-% Write the first application here.
+\begin{proposition}[Local improvement]\label{prop:local-improvement}
+  % For a retraction, state the derivative of f(R_x(-t grad f(x))) at zero is -||grad f(x)||^2.
+  % Deduce decrease for sufficiently small positive t at noncritical points, and state the ascent counterpart.
+\end{proposition}
 
-\subsection{PCA on the Grassmannian}
+\begin{proof}
+  % Apply the chain rule, the retraction property and the gradient identity.
+\end{proof}
 
-% Write another application here if needed.
+% Write the mathematical update with its sign; a step-size rule is needed for a complete iteration.
+% Boumal Section 4.3 provides context. Do not assert convergence or include code.
 
-% --------------------------------------------------
-% 8. Discussion
-% --------------------------------------------------
-\section{Discussion}
+\subsection{PCA and Ky Fan}\label{sec:pca}
 
-% Discuss what the results mean.
-% Compare different cases.
-% Explain any patterns, limitations, or interesting consequences.
+% Let A be symmetric with ordered eigenvalues; introduce ftilde(S)=tr(P(S)A).
+% Explain captured variance for covariance A.
 
-% --------------------------------------------------
-% 9. Further Directions
-% --------------------------------------------------
+\begin{definition}[Critical point]\label{def:critical-point}
+  % Define critical points by vanishing differential; explain equivalence with vanishing gradient.
+  % State that local extrema are critical, with a short curve argument or Boumal Propositions 4.5--4.6.
+\end{definition}
+
+\begin{theorem}[Critical subspaces]\label{thm:pca-critical}
+  % State that S is critical if and only if AS is contained in S.
+\end{theorem}
+
+\begin{proof}
+  % Use the horizontal lift 2(I-XX^T)AX and \cref{thm:grassmann-gradient}.
+\end{proof}
+
+\begin{lemma}[Invariant subspaces and eigenvalues]\label{lem:pca-invariant-spectrum}
+  % For symmetric A, prove invariance of S^perp when S is invariant.
+  % Show the objective on S is a sum of k eigenvalues, counted with multiplicity.
+\end{lemma}
+
+\begin{proof}
+  % Apply the spectral theorem to the two orthogonal invariant restrictions.
+\end{proof}
+
+\begin{theorem}[Ky Fan]\label{thm:ky-fan}
+  % State the maximum is lambda_1+...+lambda_k, attained by a span of corresponding eigenvectors.
+\end{theorem}
+
+\begin{proof}
+  % Use compactness, criticality at a maximiser, and \cref{lem:pca-invariant-spectrum}.
+  % Verify attainment by a top-k eigenspace.
+\end{proof}
+
+\begin{corollary}[Uniqueness under a spectral gap]\label{cor:pca-uniqueness}
+  % For k<n and lambda_k>lambda_(k+1), state uniqueness of the maximising subspace.
+  % Treat k=n separately: the Grassmannian is a single point.
+\end{corollary}
+
+\begin{proof}
+  % Use the spectral decomposition and strict separation at the kth eigenvalue.
+\end{proof}
+
+% Explain that characterising the optimum does not prove convergence of an arbitrary gradient iteration.
+
+\section{Discussion}\label{sec:discussion}
+
+% Explain what charts, projectors and horizontal lifts each contribute.
+% Relate the proved formulas to future tangent projection, gradient evaluation and feasible updates.
+% State the precise guarantees and limits; avoid unproved claims of numerical superiority.
+
 \section{Further Directions}\label{sec:further}
 
-% Mention possible extensions of the project.
-% You can discuss related structures, future work, or questions
-% that were not fully explored in this paper.
+% Keep this short: future PCA implementation and comparison against eigendecomposition.
+% Mention step-size rules and convergence as subsequent work, using Boumal Chapter 4.
+% No coding or numerical experiments before the 28 October colloquium. The larger ML application remains undecided.
 
-% --------------------------------------------------
-% 10. Conclusion
-% --------------------------------------------------
-\section{Conclusion}
+\section{Conclusion}\label{sec:conclusion}
 
-% Summarize the main ideas of the paper.
-% Restate the purpose of the project.
-% Explain what was shown or achieved.
-% End with a final sentence connecting the results to the wider topic.
+% Return to the central question and the route from smooth constraints to basis-independent feasible steps.
+% End with the PCA optimum; distinguish it from algorithmic convergence. Introduce no new results.
 
 % --------------------------------------------------
 % Bibliography
