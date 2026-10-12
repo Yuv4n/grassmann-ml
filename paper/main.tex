@@ -122,8 +122,9 @@
 % Abstract
 % --------------------------------------------------
 \begin{abstract}
-% Write last: state the optimisation question, the geometric constructions and the PCA conclusion.
-% Mention gradients and basis-independent polar updates; do not claim convergence or numerical results.
+% Write last: state the constructions of Stiefel and Grassmann and their relationship through the column-space map.
+% Identify the paper as a mathematical prelude to a future orthogonal-RNN project.
+% Mention the established Stiefel optimisation tools; experimental results are outside this paper.
 \end{abstract}
 
 \newpage
@@ -134,9 +135,29 @@
 % 1. Introduction
 % --------------------------------------------------
 \section{Introduction}\label{sec:intro}
-% Write after the main argument. Introduce orthonormal matrices and subspaces as optimisation domains.
-% Explain what the paper proves and how those results justify future first-order updates.
-% Present the work as a mathematical exposition; give a short roadmap.
+
+Orthogonality constraints provide a geometric setting for problems involving matrices with orthonormal columns.
+The Stiefel manifold describes these matrices, while the Grassmann manifold describes the subspaces they span.
+Understanding their relationship makes precise the distinction between choosing an orthonormal basis and choosing a subspace.
+
+This paper develops these manifolds as a mathematical foundation for a subsequent machine learning project involving orthogonal recurrent neural networks.
+We prove that the Stiefel manifold is a compact embedded submanifold of a matrix space and derive its tangent projection and Riemannian gradient.
+We also construct a polar retraction, which converts tangent vectors into feasible steps.
+For the Grassmannian, we construct a smooth structure through explicit charts and establish its relationship with Stiefel through the column-space map.
+This gives a smooth surjective submersion and a homeomorphism
+\[
+  \St/\Orth(k)\cong\Gr,
+\]
+where \( \Orth(k) \) acts by changing the orthonormal basis.
+
+The paper is an exposition, following Segal~\cite{segal} for smooth manifolds and differential calculus, with Boumal~\cite{boumal} supplying the Riemannian and optimisation framework.
+We assume familiarity with basic topology and finite-dimensional linear algebra, together with multivariable differential calculus.
+The intended implementation and its experimental evaluation are future work.
+
+Section~\ref{sec:prelim} introduces the required definitions and foundational results.
+Section~\ref{sec:motivation} explains the distinction between orthonormal frames and subspaces.
+Sections~\ref{sec:stiefel} and~\ref{sec:grassmann} develop the two manifolds, and Section~\ref{sec:quotient} establishes their relationship.
+Section~\ref{sec:example} connects the Stiefel results to the planned orthogonal recurrent-network project.
 
 % --------------------------------------------------
 % 2. Background / Preliminaries
@@ -333,15 +354,10 @@ For smooth maps \( F : X \longrightarrow Y \) and \( G : Y \longrightarrow Z \),
   \]
 \end{theorem}
 
-To define gradients on these manifolds, we equip their tangent spaces with inner products. For the following metric and gradient definitions, we follow \cite[Definitions 3.51--3.55, 3.58 and 3.60]{boumal}, expressing smoothness of the metric in co-ordinates.
+To define gradients on these manifolds, we equip their tangent spaces with inner products. For the following metric and gradient definitions, we follow \cite[Definitions 3.51--3.55, 3.58 and 3.60]{boumal}.
 
 \begin{definition}\label{def:riemannian-manifold}
   Let \( \mathcal{M} \) be a smooth manifold. A \textbf{Riemannian metric} on \( \mathcal{M} \) assigns an inner product \( \langle \cdot, \cdot \rangle_x \) to each tangent space \( T_x\mathcal{M} \), varying smoothly with \( x \).
-  In co-ordinates \( (U, \varphi) \), this means that each function
-  \[
-    x \longmapsto {\left\langle {(D\varphi(x))}^{-1}e_i, {(D\varphi(x))}^{-1}e_j \right\rangle}_x
-  \]
-  is smooth on \( U \), where \( e_i, e_j \) are standard basis vectors of \( \R^{\dim\mathcal{M}} \).
   A smooth manifold equipped with a Riemannian metric is a \textbf{Riemannian manifold}.
 \end{definition}
 
@@ -493,11 +509,37 @@ We will also need to determine when the derivative of a smooth map is surjective
 
 \section{Motivation}\label{sec:motivation}
 
-% Introduce maximising tr(X^T A X), with A symmetric and X^T X = I_k.
-% Explain captured variance when A is a covariance matrix. Verify the exact Boumal PCA reference before citing.
-% Show invariance under X -> XQ, Q in O(k), and distinguish an orthonormal basis from its span.
-% Pose the questions of admissible directions, feasible steps and independence from the chosen basis.
+Orthogonality constraints arise when the columns of a matrix are required to form an orthonormal family.
+For a matrix \( X\in\R^{n\times k} \), this condition is
+\[
+  X^\top X=I_k.
+\]
+The admissible matrices form the Stiefel manifold \( \St \).
+An arbitrary change to \( X \) need not preserve this equation, so optimisation under the constraint requires a description of the allowable directions and a way to move while remaining on the manifold.
 
+In some problems, the object of interest is the subspace spanned by the columns.
+If \( Q\in\Orth(k) \), then \( XQ \) is another orthonormal basis of the same subspace, since
+\[
+  (XQ)^\top(XQ)=I_k,
+  \qquad
+  \col(XQ)=\col(X).
+\]
+The Grassmannian \( \Gr \) records these \( k \)-dimensional subspaces without choosing a basis.
+This distinction leads to the column-space map
+\[
+  \pi:\St\longrightarrow\Gr,
+  \qquad
+  \pi(X)=\col(X).
+\]
+We will show that its fibres consist precisely of the orthonormal bases of each subspace, giving the identification
+\[
+  \St/\Orth(k)\cong\Gr
+\]
+as topological spaces.
+
+The following sections construct both manifolds and establish this relationship.
+For Stiefel, we also derive a tangent projection and a retraction, providing tools for optimisation with orthogonality constraints.
+These results will support a subsequent machine learning project involving orthogonal recurrent weight matrices, discussed briefly in \cref{sec:example}.
 \section{The Stiefel Manifold}\label{sec:stiefel}
 
 We now apply the preceding results to the constraint \( X^\top X=I_k \), deriving the gradient and a retraction for optimisation.
@@ -657,10 +699,7 @@ We now apply the preceding results to the constraint \( X^\top X=I_k \), derivin
 \end{corollary}
 
 \begin{proof}
-  By \cref{prop:gradient-projection,prop:stiefel-projection},
-  \[
-    \grad f(X) = \Proj_X\bigl(\nabla\bar{f}(X)\bigr) = \nabla\bar{f}(X) - X\sym\bigl(X^\top\nabla\bar{f}(X)\bigr).
-  \]
+  The general formula follows from \cref{prop:gradient-projection,prop:stiefel-projection}.
 
   For the particular objective, take the extension \( \bar{f}(X) = \tr(X^\top A X) \) on \( \R^{n \times k} \).
   Since \( A^\top = A \), for every \( V \in \R^{n \times k} \),
@@ -702,9 +741,7 @@ To construct a retraction, we first establish smoothness of the matrix inverse s
   \]
   is positive-definite and satisfies \( S^2 = A \).
 
-  To see uniqueness, suppose \( S \in \Sym^+(k) \) satisfies \( S^2 = A \). Then \( S \) commutes with \( A \), so it preserves each eigenspace of \( A \).
-  On the eigenspace corresponding to \( \lambda \), its restriction is symmetric and positive-definite, with square \( \lambda I \).
-  The spectral theorem therefore implies that this restriction is \( \sqrt{\lambda}I \). Thus \( S \) is uniquely determined.
+  Uniqueness follows from the spectral theorem: any positive-definite symmetric square root commutes with \( A \) and acts as \( \sqrt{\lambda}I \) on each eigenspace of \( A \) with eigenvalue \( \lambda \).
 
   Consider the smooth map
   \[
@@ -781,258 +818,418 @@ To construct a retraction, we first establish smoothness of the matrix inverse s
 % Construct the manifold through charts, following Segal Example 2.31 with column conventions.
 % Use the projector map to establish Hausdorffness before invoking the smooth-structure corollary.
 
+We now consider the subspaces spanned by matrices, independently of the chosen basis. 
+We follow~\cite[Example 2.31]{segal}, representing bases by columns.
+
 \begin{definition}[Grassmann manifold as a set]\label{def:grassmann}
   % Define Gr(k,n) as the set of k-dimensional subspaces; represent S by col(Y) for full-rank Y.
+  Fix integers \( 1 \le k \le n \). The \textbf{Grassmannian} \( \Gr \) is the set of \( k \)-dimensional subspaces of \( \R^n \).
+
+  Every \( S \in \Gr \) can be represented as \( S = \col(Y) \), where \( Y \in \R^{n \times k} \) has rank \( k \) and \( \col(Y) \) denotes its column space.
 \end{definition}
 
 \begin{lemma}[Change of basis]\label{lem:grassmann-change-basis}
   % State col(Y)=col(Y') if and only if Y'=YG for some G in GL_k.
+  Let \( Y,Y' \in \R^{n \times k} \) have rank \( k \).
+  Then
+  \[
+    \col(Y) = \col(Y') \quad \Longleftrightarrow \quad Y'=YG \text{ for some } G \in \GL_k(\R),
+  \]
+  where \( \GL_k(\R) \) is the group of invertible \( k \times k \) real matrices.
 \end{lemma}
 
 \begin{proof}
   % Express the columns of either basis in the other.
+  Suppose \( \col(Y) = \col(Y') \). Each column of \( Y' \) is a linear combination of the columns of \( Y \), so \( Y'=YG \) for some \( G \in \R^{k \times k} \).
+  If \( Gv=0 \), then \( Y'v=YGv=0 \). Since \( Y' \) has rank \( k \), this implies \( v=0 \).
+  Thus \( G \) is invertible.
+
+  Conversely, if \( Y'=YG \) with \( G \) invertible, then \( \col(Y') \subseteq \col(Y) \).
+  Since \( Y=Y'G^{-1} \), the reverse inclusion also holds.
 \end{proof}
 
 \begin{definition}[Grassmann pseudo-charts]\label{def:grassmann-charts}
   % Define row index sets I, the row minor Y_I, and U_I.
   % Explain basis independence using \cref{lem:grassmann-change-basis}.
   % Define phi_I using the rows I^c of Y Y_I^(-1).
+  Let \( I \subseteq \{1,\dots,n\} \) have \( k \) elements, and let \( I^c \) denote its complement.
+  For \( Y \in \R^{n \times k} \), write \( Y_I \) for the submatrix formed by the rows indexed by \( I \), in increasing order. 
+  Define
+  \[
+    U_I = \{S \in \Gr : Y_I \text{ is invertible
+    for a basis matrix } Y \text{ of } S\}.
+  \]
+  This condition is independent of the choice of basis:
+  by \cref{lem:grassmann-change-basis}, another basis matrix
+  has the form \( Y'=YG \), with \( G \in \GL_k(\R) \), and
+  \[
+    Y'_I = Y_I G.
+  \]
+  Thus \( Y'_I \) is invertible if and only if \( Y_I \) is.
+
+  For \( S \in U_I \), define
+  \[
+    \varphi_I(S) = (YY_I^{-1})_{I^c} \in \R^{(n-k)\times k},
+  \]
+  where the rows indexed by \( I^c \) are also taken in increasing order.
+  This is well-defined, since
+  \[
+    Y'(Y'_I)^{-1} = YG(Y_I G)^{-1} = YY_I^{-1}.
+  \]
 \end{definition}
 
 \begin{lemma}[Chart inverses and covering]\label{lem:grassmann-chart-cover}
   % State bijectivity onto R^((n-k)-by-k) and that the U_I cover.
+  Each map
+  \[
+    \varphi_I : U_I \longrightarrow \R^{(n-k)\times k}
+  \]
+  is a bijection, and the sets \( U_I \) cover \( \Gr \).
+  Hence these maps form a pseudo-atlas on \( \Gr \), identifying \( \R^{(n-k)\times k} \) with \( \R^{k(n-k)} \).
 \end{lemma}
 
 \begin{proof}
   % Construct Y_B with identity rows in I and B in I^c.
   % Use a nonzero k-by-k minor for coverage.
+  For \( B \in \R^{(n-k)\times k} \), let \( Y_B \in \R^{n\times k} \) be the matrix whose rows indexed by \( I \) form \( I_k \), and whose remaining rows form \( B \), in the specified order.
+  Since \( (Y_B)_I=I_k \), the matrix \( Y_B \) has rank \( k \), and \( \col(Y_B) \in U_I \).
+  Moreover,
+  \[
+    \varphi_I(\col(Y_B))=B.
+  \]
+
+  Conversely, if \( S=\col(Y) \in U_I \), the matrix \( YY_I^{-1} \) has rows \( I_k \) at the indices \( I \) and rows \( \varphi_I(S) \) at the indices \( I^c \).
+  It is therefore \( Y_{\varphi_I(S)} \), and its column space is \( S \).
+  Thus
+  \[
+    \varphi_I^{-1}(B)=\col(Y_B).
+  \]
+
+  Finally, every rank-\( k \) matrix \( Y \in \R^{n\times k} \) has an invertible \( k\times k \) row minor.
+  Hence every \( S \in \Gr \) belongs to some \( U_I \), proving that these sets cover \( \Gr \).
 \end{proof}
 
 \begin{lemma}[Smooth transitions]\label{lem:grassmann-transitions}
-  % State the overlap condition det((Y_B)_J) != 0 and the transition formula.
+  Let \( I,J \subseteq \{1,\dots,n\} \) each have \( k \) elements. 
+  For \( B \in \R^{(n-k)\times k} \), let \( Y_B \) denote the basis matrix associated with the chart indexed by \( I \), so that
+  \[
+    (Y_B)_I = I_k, \qquad (Y_B)_{I^c} = B.
+  \]
+  Then
+  \[
+    \varphi_I(U_I \cap U_J) = \{B \in \R^{(n-k)\times k} : \det((Y_B)_J) \ne 0\}
+  \]
+  is open. 
+  On this set, the transition function is
+  \[
+    (\varphi_J \circ \varphi_I^{-1})(B) = \bigl(Y_B((Y_B)_J)^{-1}\bigr)_{J^c},
+  \]
+  and is smooth.
 \end{lemma}
 
 \begin{proof}
-  % Check openness and smoothness using matrix inversion on invertible matrices.
+  By \cref{lem:grassmann-chart-cover}, \( \varphi_I^{-1}(B)=\col(Y_B) \).
+  This subspace belongs to \( U_J \) precisely when \( (Y_B)_J \) is invertible, giving the stated overlap image.
+
+  The entries of \( Y_B \) are constant or entries of \( B \).
+  Hence \( B \mapsto \det((Y_B)_J) \) is polynomial, so its nonzero set is open.
+
+  Applying the definition of \( \varphi_J \) to the basis matrix \( Y_B \) gives
+  \[
+    (\varphi_J \circ \varphi_I^{-1})(B) = \bigl(Y_B((Y_B)_J)^{-1}\bigr)_{J^c}.
+  \]
+  Matrix inversion is smooth on invertible matrices.
+  Matrix multiplication and row extraction are also smooth, so this transition function is smooth on the overlap image.
+  Interchanging \( I \) and \( J \) gives the same conclusions for the opposite transition.
 \end{proof}
 
 \begin{proposition}[Topology from the pseudo-atlas]\label{prop:grassmann-topology}
-  % Apply \cref{prop:pseudo-atlas-topology} to obtain the unique chart topology.
-  % Reserve the smooth manifold conclusion until Hausdorffness and second countability are established.
+  There is a unique topology on \( \Gr \) for which each \( U_I \) is open and
+  \[
+    \varphi_I : U_I \longrightarrow \R^{(n-k)\times k}
+  \]
+  is a homeomorphism.
 \end{proposition}
 
 \begin{proof}
-  % Verify the hypotheses using the preceding lemmas.
+  By \cref{lem:grassmann-chart-cover}, the pairs \( (U_I,\varphi_I) \) form a pseudo-atlas on \( \Gr \).
+  By \cref{lem:grassmann-transitions}, the overlap images are open and the transition functions are smooth, hence continuous.
+  The conclusion follows from \cref{prop:pseudo-atlas-topology}.
 \end{proof}
 
 \begin{proposition}[Projector representation]\label{prop:grassmann-projector}
-  % Define P(S)=Y(Y^T Y)^(-1)Y^T and show it is well-defined, injective and continuous.
-  % For an orthonormal basis X, record P(S)=XX^T.
+  For \( S \in \Gr \), let \( Y \in \R^{n \times k} \) be a basis matrix of \( S \).
+  The map
+  \[
+    P : \Gr \longrightarrow \Sym(n), \qquad P(S) = Y(Y^\top Y)^{-1}Y^\top
+  \]
+  is well-defined, continuous and injective, and \( P(S) \) is the orthogonal projector onto \( S \).
+  Consequently, \( \Gr \) is Hausdorff.
+  If \( X \in \St \) is an orthonormal basis matrix of \( S \), then \( P(S)=XX^\top \).
 \end{proposition}
 
 \begin{proof}
-  % Verify invariance under Y -> YG and identify the image of P(S) with S.
-  % Check continuity in the pseudo-atlas charts.
+  Since \( Y \) has rank \( k \), the matrix \( Y^\top Y \) is positive-definite and hence invertible.
+  If \( Y'=YG \) is another basis matrix of \( S \), with \( G \in \GL_k(\R) \), then
+  \[
+    \begin{aligned}
+      Y'(Y'^\top Y')^{-1}Y'^\top
+      &= YG(G^\top Y^\top YG)^{-1}G^\top Y^\top \\
+      &= Y(Y^\top Y)^{-1}Y^\top.
+    \end{aligned}
+  \]
+  Thus \( P \) is well-defined.
+
+  The matrix \( P(S) \) is symmetric, its image is contained in \( S \), and
+  \[
+    P(S)Y = Y.
+  \]
+  Hence it acts as the identity on \( S \), so its image is exactly \( S \) and \( P(S)^2=P(S) \).
+  Therefore \( P(S) \) is the orthogonal projector onto \( S \).
+  Since its image determines \( S \), the map \( P \) is injective.
+
+  In the chart indexed by \( I \), we have
+  \[
+    (P \circ \varphi_I^{-1})(B) = Y_B(Y_B^\top Y_B)^{-1}Y_B^\top.
+  \]
+  The entries of \( Y_B \) depend affinely on \( B \), and \( Y_B^\top Y_B \) is invertible for every \( B \).
+  Matrix multiplication and inversion are continuous, so this expression is continuous.
+  Since the sets \( U_I \) form an open cover, \( P \) is continuous on \( \Gr \).
+
+  Distinct points of \( \Gr \) have distinct images under \( P \), which admit disjoint open neighbourhoods in \( \Sym(n) \).
+  Their inverse images under \( P \) are disjoint open neighbourhoods in \( \Gr \), proving Hausdorffness.
+
+  Finally, if \( X \in \St \) represents \( S \), then \( X^\top X=I_k \), giving
+  \[
+    P(S)=X(X^\top X)^{-1}X^\top=XX^\top.
+  \]
 \end{proof}
 
 \begin{theorem}[Smooth structure and dimension]\label{thm:grassmann-manifold}
-  % Conclude that Gr(k,n) is a smooth manifold of dimension k(n-k), and that P is smooth.
+  The pseudo-atlas \( \{(U_I,\varphi_I)\} \) equips \( \Gr \) with a smooth structure of dimension \( k(n-k) \).
+  With this structure, the projector map \( P : \Gr \longrightarrow \Sym(n) \) is smooth.
 \end{theorem}
 
 \begin{proof}
-  % Use the continuous injection P for Hausdorffness and the finite open chart cover for second countability.
-  % Apply \cref{cor:pseudo-atlas-smooth-structure}; then check smoothness of P in charts.
+  By \cref{prop:grassmann-topology}, the sets \( U_I \) form an open cover of \( \Gr \), and each \( \varphi_I \) is a homeomorphism onto \( \R^{(n-k)\times k} \).
+  Moreover, \( \Gr \) is Hausdorff by \cref{prop:grassmann-projector}.
+
+  Each \( U_I \) has a countable basis transported from \( \R^{(n-k)\times k} \) through \( \varphi_I \).
+  There are only finitely many index sets \( I \), so the union of these bases is a countable basis for \( \Gr \).
+  Thus \( \Gr \) is second countable.
+
+  By \cref{lem:grassmann-transitions}, all transition functions are smooth.
+  Hence \cref{cor:pseudo-atlas-smooth-structure} gives a smooth structure on \( \Gr \), with
+  \[
+    \dim \Gr = \dim \R^{(n-k)\times k} = k(n-k).
+  \]
+
+  Finally, in each chart,
+  \[
+    (P \circ \varphi_I^{-1})(B) = Y_B(Y_B^\top Y_B)^{-1}Y_B^\top.
+  \]
+  The entries of \( Y_B \) depend affinely on \( B \), and \( Y_B^\top Y_B \) is invertible for every \( B \).
+  Since matrix multiplication and inversion are smooth, these coordinate expressions are smooth.
+  Therefore \( P \) is smooth.
 \end{proof}
 
 \section{From Stiefel to Grassmann}\label{sec:quotient}
 
-% Explain how subspace geometry can be computed using orthonormal representatives.
-% Supplementary source: Boumal Chapter 9, especially Section 9.16.
+An element of the Stiefel manifold specifies an orthonormal basis, while an element of the Grassmannian records only the subspace it spans.
+We relate these manifolds by forgetting the choice of basis.
 
 \begin{definition}[Column-space map]\label{def:column-space-map}
-  % Define pi: St(n,k) -> Gr(k,n), X -> col(X).
+  The \textbf{column-space map} is
+  \[
+    \pi : \St \longrightarrow \Gr, \qquad \pi(X)=\col(X).
+  \]
 \end{definition}
 
 \begin{proposition}[Smoothness and fibres]\label{prop:column-space-map}
-  % State smoothness, surjectivity, and pi(X)=pi(X') iff X'=XQ with Q in O(k).
+  The map \( \pi \) is smooth and surjective.
+  For \( X,X' \in \St \),
+  \[
+    \pi(X)=\pi(X') \quad\Longleftrightarrow\quad X'=XQ \text{ for some } Q \in \Orth(k).
+  \]
+  Thus the fibre over \( \pi(X) \) is
+  \[
+    \pi^{-1}(\pi(X))=\{XQ:Q\in\Orth(k)\}.
+  \]
 \end{proposition}
 
 \begin{proof}
-  % Use the Grassmann charts and orthonormal bases; identify the change-of-basis matrix.
+  Every \( k \)-dimensional subspace of \( \R^n \) has an orthonormal basis, so \( \pi \) is surjective.
+
+  For each index set \( I \), we have
+  \[
+    \pi^{-1}(U_I)=\{X\in\St:\det(X_I)\ne0\},
+  \]
+  which is open in \( \St \).
+  On this set,
+  \[
+    (\varphi_I\circ\pi)(X)=(XX_I^{-1})_{I^c}.
+  \]
+  This formula extends smoothly to the open subset \( \{Y\in\R^{n\times k}:\det(Y_I)\ne0\} \) of the ambient matrix space.
+  Hence each coordinate expression is smooth.
+  Since the sets \( U_I \) cover \( \Gr \), the map \( \pi \) is smooth.
+
+  Suppose \( \pi(X)=\pi(X') \).
+  By \cref{lem:grassmann-change-basis}, there is an invertible matrix \( Q \) such that \( X'=XQ \).
+  Since both matrices have orthonormal columns,
+  \[
+    I_k=X'^\top X'=Q^\top X^\top XQ=Q^\top Q.
+  \]
+  Thus \( Q\in\Orth(k) \).
+  Conversely, if \( X'=XQ \) with \( Q\in\Orth(k) \), then \( Q \) is invertible, so \( \col(X')=\col(X) \).
+  The description of the fibre follows.
 \end{proof}
 
 \begin{lemma}[Local sections]\label{lem:grassmann-local-sections}
-  % Define s_I(B)=Y_B(Y_B^T Y_B)^(-1/2) and state pi composed with s_I = phi_I^(-1).
+  Fix an index set \( I \), and for \( B \in \R^{(n-k)\times k} \), let \( Y_B \) be the matrix with \( (Y_B)_I=I_k \) and \( (Y_B)_{I^c}=B \).
+  The map
+  \[
+    s_I : \R^{(n-k)\times k} \longrightarrow \St, \qquad s_I(B)=Y_B(Y_B^\top Y_B)^{-1/2}
+  \]
+  is smooth and satisfies
+  \[
+    \pi\circ s_I=\varphi_I^{-1}.
+  \]
+  Consequently, \( \sigma_I=s_I\circ\varphi_I : U_I\longrightarrow\St \) is a smooth local section of \( \pi \), meaning that \( \pi\circ\sigma_I=\id_{U_I} \).
 \end{lemma}
 
 \begin{proof}
-  % Use \cref{lem:smooth-matrix-square-root} and verify the section identity.
+  Since \( Y_B \) has rank \( k \), the matrix \( A_B=Y_B^\top Y_B \) is positive-definite.
+  By \cref{lem:smooth-matrix-square-root}, the map \( B\mapsto A_B^{-1/2} \) is smooth.
+  Hence \( s_I \) is smooth as a map into \( \R^{n\times k} \).
+  Moreover,
+  \[
+    s_I(B)^\top s_I(B)=A_B^{-1/2}A_BA_B^{-1/2}=I_k,
+  \]
+  so its image lies in \( \St \).
+  By the smoothness criterion for maps into embedded submanifolds, \( s_I \) is smooth as a map into \( \St \).
+
+  Since \( A_B^{-1/2} \) is invertible, multiplication by it does not change the column space.
+  Therefore
+  \[
+    \pi(s_I(B))=\col(Y_B)=\varphi_I^{-1}(B).
+  \]
+  Composing with \( \varphi_I \) gives \( \pi\circ\sigma_I=\id_{U_I} \), and \( \sigma_I \) is smooth as a composition of smooth maps.
 \end{proof}
 
 \begin{theorem}[Submersion and quotient]\label{thm:grassmann-quotient}
-  % State that pi is a surjective submersion, Gr(k,n) is compact, and St(n,k)/O(k) is homeomorphic to Gr(k,n).
-  % Specify the quotient topology.
+  The column-space map \( \pi : \St \longrightarrow \Gr \) is a surjective submersion, and \( \Gr \) is compact.
+  The induced map
+  \[
+    \overline{\pi} : \St/\Orth(k) \longrightarrow \Gr, \qquad [X]\longmapsto\col(X),
+  \]
+  is a homeomorphism, where \( \St/\Orth(k) \) is the set of orbits under right multiplication by \( \Orth(k) \), equipped with the quotient topology.
 \end{theorem}
 
 \begin{proof}
-  % Differentiate the section identity to prove surjectivity at section representatives.
-  % Transfer to every X=s_I(B)Q using right multiplication and pi(XQ)=pi(X).
-  % Use compactness and Hausdorffness for the quotient homeomorphism.
+  Smoothness and surjectivity follow from \cref{prop:column-space-map}.
+  Let \( X\in\St \), set \( S=\pi(X) \), and choose \( I \) such that \( S\in U_I \).
+  By \cref{lem:grassmann-local-sections}, there is a smooth local section \( \sigma_I : U_I\longrightarrow\St \) satisfying \( \pi\circ\sigma_I=\id_{U_I} \).
+  Differentiating at \( S \) gives
+  \[
+    D\pi(\sigma_I(S))\circ D\sigma_I(S)=\id_{T_S\Gr}.
+  \]
+  Hence \( D\pi(\sigma_I(S)) \) is surjective.
+
+  Since \( X \) and \( \sigma_I(S) \) span the same subspace, \cref{prop:column-space-map} gives \( X=\sigma_I(S)Q \) for some \( Q\in\Orth(k) \).
+  Right multiplication
+  \[
+    \rho_Q : \St\longrightarrow\St, \qquad \rho_Q(Y)=YQ,
+  \]
+  is a diffeomorphism with inverse \( \rho_{Q^\top} \), and \( \pi\circ\rho_Q=\pi \).
+  The chain rule therefore gives
+  \[
+    D\pi(X)\circ D\rho_Q(\sigma_I(S))=D\pi(\sigma_I(S)).
+  \]
+  Since the right-hand side is surjective, \( D\pi(X) \) is surjective.
+  Thus \( \pi \) is a submersion.
+
+  By \cref{prop:stiefel-compact}, \( \St \) is compact.
+  Since \( \pi \) is continuous and surjective, \( \Gr \) is compact.
+
+  Let \( q : \St\longrightarrow\St/\Orth(k) \) be the quotient map.
+  By \cref{prop:column-space-map}, the fibres of \( \pi \) are precisely the orbits, so \( \overline{\pi} \) is well-defined and bijective.
+  Since \( \pi=\overline{\pi}\circ q \) is continuous, the definition of the quotient topology implies that \( \overline{\pi} \) is continuous.
+  The space \( \St/\Orth(k) \) is compact as the continuous image of \( \St \) under \( q \), and \( \Gr \) is Hausdorff by \cref{prop:grassmann-projector}.
+  Therefore \( \overline{\pi} \) is a homeomorphism.
 \end{proof}
 
-\begin{proposition}[Vertical and horizontal spaces]\label{prop:grassmann-horizontal}
-  % Identify ker Dpi(X)={X Omega : Omega^T=-Omega} and H_X={V : X^T V=0}.
-  % Show Dpi(X) restricted to H_X is an isomorphism.
-\end{proposition}
+Each orbit \( \{XQ:Q\in\Orth(k)\} \) consists of all orthonormal bases of one subspace.
+Thus passing from the Stiefel manifold to the Grassmannian forgets the choice of orthonormal basis.
 
-\begin{proof}
-  % Use the curves X exp(t Omega), dimensions and Frobenius orthogonality.
-\end{proof}
-
-\begin{definition}[Horizontal lift]\label{def:horizontal-lift}
-  % Define lift_X as the inverse of Dpi(X) restricted to H_X.
-\end{definition}
-
-\begin{proposition}[Change of representative]\label{prop:horizontal-equivariance}
-  % State H_XQ=H_X Q and lift_XQ(xi)=lift_X(xi)Q; corresponding lifts have the same inner product.
-\end{proposition}
-
-\begin{proof}
-  % Differentiate invariance of pi and use uniqueness of horizontal lifts and Frobenius invariance.
-\end{proof}
-
-\begin{definition}[Grassmann metric]\label{def:grassmann-metric}
-  % Define the metric by the inner products of horizontal lifts.
-\end{definition}
-
-\begin{proposition}[Well-defined smooth metric]\label{prop:grassmann-metric}
-  % Establish representative independence and smoothness; explain the resulting Riemannian submersion.
-\end{proposition}
-
-\begin{proof}
-  % Use \cref{prop:horizontal-equivariance} and local sections.
-  % Justify smooth dependence of the inverse restricted derivatives and horizontal lifts.
-\end{proof}
-
-\begin{theorem}[Invariant objectives and gradients]\label{thm:grassmann-gradient}
-  % Prove that invariant smooth f on Stiefel descends to unique smooth ftilde on Grassmann.
-  % State lift_X(grad ftilde)=grad f(X)=(I-XX^T) nabla fbar(X).
-\end{theorem}
-
-\begin{proof}
-  % Use local sections for smooth descent and invariance to show the gradient is horizontal.
-  % Identify the gradient through the metric and chain rule.
-\end{proof}
-
-\begin{lemma}[Polar equivariance]\label{lem:polar-equivariance}
-  % State R_XQ(VQ)=R_X(V)Q.
-\end{lemma}
-
-\begin{proof}
-  % Use orthogonal conjugation of the positive-definite inverse square root.
-\end{proof}
-
-\begin{theorem}[Grassmann polar retraction]\label{thm:grassmann-retraction}
-  % Define Rcal_S(xi)=pi(R_X(lift_X(xi))) and prove that it is a retraction.
-\end{theorem}
-
-\begin{proof}
-  % Prove representative independence using \cref{lem:polar-equivariance}.
-  % Use local sections and smooth lifts for smoothness; use the chain rule for the first-order property.
-  % Supplementary guidance: Boumal Theorem 9.33 and Example 9.34.
-\end{proof}
-
-\begin{corollary}[Basis-independent updates]\label{cor:basis-independent-update}
-  % For an invariant objective and the same scalar step size, changing X to XQ leaves the updated subspace unchanged.
-\end{corollary}
-
-\begin{proof}
-  % Combine gradient transformation with polar equivariance.
-\end{proof}
-
-% Optional remark: critical representatives form O(k)-orbits; this describes redundancy, not a speed guarantee.
+% Close this section by explaining that an O(k)-orbit consists of all orthonormal bases of one subspace.
+% The quotient identification is the central conclusion of the paper's geometric construction.
 
 \section{Applications}\label{sec:example}
 
-% Connect the geometry to local improvement, then characterise the global PCA optimum.
+The Stiefel manifold provides a constraint set for recurrent neural networks with orthogonal recurrent weights.
+Consider the recurrence
+\[
+  h_t=\sigma(Wh_{t-1}+Ux_t+b),
+\]
+where \( x_t\in\R^d \) is the input, \( h_t\in\R^n \) is the hidden state, \( U\in\R^{n\times d} \) is the input weight matrix, \( b\in\R^n \) is a bias, and \( \sigma \) is a smooth activation function applied componentwise.
+Requiring the recurrent matrix \( W\in\R^{n\times n} \) to satisfy \( W^\top W=I_n \) places it in \( \mathrm{St}(n,n)=\Orth(n) \).
+The linear transformation \( h\mapsto Wh \) then preserves Euclidean norms, although the full recurrence need not do so because of the activation and input terms.
 
-\subsection{Gradient steps on the manifold}\label{sec:gradient-steps}
+Let \( L \) be a smooth training loss, and let \( G=\nabla\bar{L}(W) \) denote its ambient gradient with respect to \( W \), holding the other parameters fixed.
+Backpropagation through time computes this gradient by differentiating through the recurrence.
+By \cref{cor:stiefel-gradient}, the corresponding Riemannian gradient is
+\[
+  \grad L(W)=G-W\sym(W^\top G),
+\]
+following \cite[Section 7.3, equation (7.28)]{boumal}.
+Since \( WW^\top=I_n \), this can also be written as
+\[
+  \grad L(W)=W\Skew(W^\top G),
+  \qquad \Skew(B):=\frac{B-B^\top}{2}.
+\]
+Thus the ambient gradient determines a tangent direction compatible with the orthogonality constraint.
+A retraction converts a step in this direction into another orthogonal matrix, as established for the polar retraction in \cref{prop:stiefel-polar-retraction}.
 
-\begin{proposition}[Local improvement]\label{prop:local-improvement}
-  % For a retraction, state the derivative of f(R_x(-t grad f(x))) at zero is -||grad f(x)||^2.
-  % Deduce decrease for sufficiently small positive t at noncritical points, and state the ascent counterpart.
-\end{proposition}
+These results provide the mathematical foundation for a planned NumPy implementation of Riemannian gradient descent for orthogonal recurrent networks.
+The implementation will use a Cayley retraction, whose construction and verification will be treated separately from the polar retraction proved here.
+Backpropagation through time will be derived explicitly, and experiments across multiple random seeds will compare hard orthogonality constraints with an unconstrained objective containing a soft penalty of the form
+\[
+  \bar{L}(W)+\lambda\|W^\top W-I_n\|_F^2,
+  \qquad \lambda>0.
+\]
+Such a penalty discourages departures from orthogonality without requiring the constraint to hold exactly.
+The experimental comparison is future work; no claim of improved training performance follows from the geometric results alone.
 
-\begin{proof}
-  % Apply the chain rule, the retraction property and the gradient identity.
-\end{proof}
-
-% Write the mathematical update with its sign; a step-size rule is needed for a complete iteration.
-% Boumal Section 4.3 provides context. Do not assert convergence or include code.
-
-\subsection{PCA and Ky Fan}\label{sec:pca}
-
-% Let A be symmetric with ordered eigenvalues; introduce ftilde(S)=tr(P(S)A).
-% Explain captured variance for covariance A.
-
-\begin{definition}[Critical point]\label{def:critical-point}
-  % Define critical points by vanishing differential; explain equivalence with vanishing gradient.
-  % State that local extrema are critical, with a short curve argument or Boumal Propositions 4.5--4.6.
-\end{definition}
-
-\begin{theorem}[Critical subspaces]\label{thm:pca-critical}
-  % State that S is critical if and only if AS is contained in S.
-\end{theorem}
-
-\begin{proof}
-  % Use the horizontal lift 2(I-XX^T)AX and \cref{thm:grassmann-gradient}.
-\end{proof}
-
-\begin{lemma}[Invariant subspaces and eigenvalues]\label{lem:pca-invariant-spectrum}
-  % For symmetric A, prove invariance of S^perp when S is invariant.
-  % Show the objective on S is a sum of k eigenvalues, counted with multiplicity.
-\end{lemma}
-
-\begin{proof}
-  % Apply the spectral theorem to the two orthogonal invariant restrictions.
-\end{proof}
-
-\begin{theorem}[Ky Fan]\label{thm:ky-fan}
-  % State the maximum is lambda_1+...+lambda_k, attained by a span of corresponding eigenvectors.
-\end{theorem}
-
-\begin{proof}
-  % Use compactness, criticality at a maximiser, and \cref{lem:pca-invariant-spectrum}.
-  % Verify attainment by a top-k eigenspace.
-\end{proof}
-
-\begin{corollary}[Uniqueness under a spectral gap]\label{cor:pca-uniqueness}
-  % For k<n and lambda_k>lambda_(k+1), state uniqueness of the maximising subspace.
-  % Treat k=n separately: the Grassmannian is a single point.
-\end{corollary}
-
-\begin{proof}
-  % Use the spectral decomposition and strict separation at the kth eigenvalue.
-\end{proof}
-
-% Explain that characterising the optimum does not prove convergence of an arbitrary gradient iteration.
+The Grassmannian clarifies the distinction between a matrix and the subspace it spans.
+In this application, the recurrent transformation depends on \( W \) itself, while every \( W\in\Orth(n) \) spans \( \R^n \).
+Hence \( \mathrm{Gr}(n,n) \), which consists of a single point, does not parametrise the recurrent weights.
 
 \section{Discussion}\label{sec:discussion}
 
-% Explain what charts, projectors and horizontal lifts each contribute.
-% Relate the proved formulas to future tangent projection, gradient evaluation and feasible updates.
-% State the precise guarantees and limits; avoid unproved claims of numerical superiority.
+The relationship between the Stiefel and Grassmann manifolds expresses the distinction between an orthonormal frame and the subspace it spans.
+The column-space map identifies precisely those frames that differ by right multiplication by an orthogonal matrix.
+By \cref{thm:grassmann-quotient}, this identification gives a homeomorphism
+\[
+  \St/\Orth(k)\cong\Gr,
+\]
+and the column-space map is a smooth surjective submersion.
+The explicit Grassmann charts provide the smooth structure used in this argument, while the projector representation describes each subspace independently of a chosen basis.
 
-\section{Further Directions}\label{sec:further}
-
-% Keep this short: future PCA implementation and comparison against eigendecomposition.
-% Mention step-size rules and convergence as subsequent work, using Boumal Chapter 4.
-% No coding or numerical experiments before the 28 October colloquium. The larger ML application remains undecided.
+The Stiefel calculations also explain how the orthogonality constraint can be respected during optimisation.
+The tangent projection converts an ambient gradient into the Riemannian gradient for the induced Frobenius metric.
+The polar retraction then provides a way to return a tangent step to the manifold while preserving its direction to first order.
+These results establish feasible updates, but do not by themselves guarantee that a chosen step decreases the loss or that an iteration converges.
+They provide a mathematical starting point for the subsequent implementation, whose update rule and training behaviour require separate analysis and evaluation.
 
 \section{Conclusion}\label{sec:conclusion}
 
-% Return to the central question and the route from smooth constraints to basis-independent feasible steps.
-% End with the PCA optimum; distinguish it from algorithmic convergence. Introduce no new results.
+We have constructed the Stiefel and Grassmann manifolds and established their relationship through the column-space map.
+The Stiefel manifold records orthonormal frames, while the Grassmannian records their spans.
+The identification \( \St/\Orth(k)\cong\Gr \) makes this distinction precise: passing to the quotient removes the choice of orthonormal basis.
+
+The tangent projection, Riemannian gradient and polar retraction derived for Stiefel provide tools for optimisation under orthogonality constraints.
+Together with the geometric constructions, these results form a foundation for the planned machine learning project on orthogonal recurrent networks.
+The implementation and its experimental evaluation remain subsequent work.
 
 % --------------------------------------------------
 % Bibliography
