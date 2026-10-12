@@ -121,10 +121,14 @@
 % --------------------------------------------------
 % Abstract
 % --------------------------------------------------
+
 \begin{abstract}
-% Write last: state the constructions of Stiefel and Grassmann and their relationship through the column-space map.
-% Identify the paper as a mathematical prelude to a future orthogonal-RNN project.
-% Mention the established Stiefel optimisation tools; experimental results are outside this paper.
+We develop the geometry of the Stiefel and Grassmann manifolds as a foundation for optimisation with orthogonality constraints.
+The Stiefel manifold is realised as a compact embedded submanifold of a matrix space, with explicit formulas for its tangent projection and Riemannian gradient under the Frobenius metric.
+We also verify a polar retraction.
+The Grassmannian is constructed through coordinate charts, and the column-space map is shown to be a smooth surjective submersion inducing a homeomorphism \( \St/\Orth(k)\cong\Gr \).
+This identifies the passage from an orthonormal frame to its span with forgetting the choice of basis.
+The exposition concludes with a brief application to a planned machine learning project involving orthogonal recurrent neural networks.
 \end{abstract}
 
 \newpage
@@ -135,6 +139,8 @@
 % 1. Introduction
 % --------------------------------------------------
 \section{Introduction}\label{sec:intro}
+
+In the Stiefel and Grassmann constructions, \( n \) and \( k \) are integers with \( 1\le k\le n \).
 
 Orthogonality constraints provide a geometric setting for problems involving matrices with orthonormal columns.
 The Stiefel manifold describes these matrices, while the Grassmann manifold describes the subspaces they span.
@@ -163,8 +169,6 @@ Section~\ref{sec:example} connects the Stiefel results to the planned orthogonal
 % 2. Background / Preliminaries
 % --------------------------------------------------
 \section{Preliminaries}\label{sec:prelim}
-% Introduce the basic objects and notation needed for the paper.
-% This section should contain definitions before they are used later.
 
 This section introduces the smooth structures and differential calculus used to construct the Stiefel and Grassmann manifolds.
 
@@ -173,8 +177,8 @@ This section introduces the smooth structures and differential calculus used to 
 We follow Segal \cite[Sections 2--5]{segal} for smooth structures and differential calculus.
 
 \begin{definition}\label{def:co-ordinate-chart}
-  Let \( X \) be a topological space. 
-  A \textbf{co-ordinate chart} on \( X \) is the pair \( (U, \varphi)\) where \( U \subset X \) is open, and \( \varphi \) is a homeomorphism 
+  Let \( X \) be a topological space.
+  A \textbf{co-ordinate chart} on \( X \) is the pair \( (U, \varphi)\) where \( U \subset X \) is open, and \( \varphi \) is a homeomorphism
   \[
     \varphi: U \xlongrightarrow{\sim} \varphi(U)
   \]
@@ -192,7 +196,7 @@ We follow Segal \cite[Sections 2--5]{segal} for smooth structures and differenti
   Let \( X \) be a topological manifold, and let \( (U, \varphi_1) \) and \( (V, \varphi_2) \) be two co-ordinate charts on \( X \).
   The \textbf{transition function} between these two co-ordinate charts is the function:
   \[
-    \phi_{21} = \varphi_2 \circ \varphi_1^{-1} : \varphi_1(U \cap V) \xlongrightarrow{\sim} \varphi_2(U \cap V) 
+    \phi_{21} = \varphi_2 \circ \varphi_1^{-1} : \varphi_1(U \cap V) \xlongrightarrow{\sim} \varphi_2(U \cap V)
   \]
   It is a homeomorphism, with inverse \( \phi_{21}^{-1} = \phi_{12} = \varphi_1 \circ \varphi_2^{-1} \).
 \end{definition}
@@ -205,22 +209,22 @@ We follow Segal \cite[Sections 2--5]{segal} for smooth structures and differenti
   \]
   indexed by some, possibly infinite, set \( I \), such that:
   \[
-  \bigcup_{i \in I}U_i = X    
+  \bigcup_{i \in I}U_i = X
   \]
-  
+
   An atlas is a \textbf{smooth atlas} if all its transition functions are smooth, i.e. infinitely differentiable.
 \end{definition}
 
 \begin{definition}\label{def:compatible-atlases}
-  Let \( X \) be a topological manifold, and let \( \mathcal{A} = \{(U_i, \varphi_i); i \in I\} \) be a smooth atlas on \( X \). 
+  Let \( X \) be a topological manifold, and let \( \mathcal{A} = \{(U_i, \varphi_i); i \in I\} \) be a smooth atlas on \( X \).
   Let \( (U, \varphi) \) be any co-ordinate chart on \( X \).
   The chart \( (U, \varphi) \) is \textbf{compatible} with the atlas \( \mathcal{A} \) if the transition functions between \( (U, \varphi) \) and any chart in \( \mathcal{A} \) are diffeomorphisms, i.e. they are smooth functions with smooth inverses.
 
   In other words, the new chart \( (U, \varphi) \) is compatible with the atlas \( \mathcal{A} \) if the union \( \mathcal{A} \cup \{(U, \varphi)\} \) is still a smooth atlas.
-  
+
   \bigskip
   \noindent
-  
+
   Let \( \mathcal{A}, \mathcal{B} \) be smooth atlases on \( X \). The atlases \( \mathcal{A} \) and \( \mathcal{B} \) are \textbf{compatible} if every chart in \( \mathcal{A} \) is compatible with \( \mathcal{B} \), and vice versa.
 \end{definition}
 
@@ -229,8 +233,8 @@ We follow Segal \cite[Sections 2--5]{segal} for smooth structures and differenti
 \end{corollary}
 
 \begin{definition}\label{def:smooth-manifold}
-  A \textbf{smooth manifold} is a topological manifold \( X \) together with an equivalence class \( [\mathcal{A}] \) of compatible smooth atlases on \( X \). 
-  
+  A \textbf{smooth manifold} is a topological manifold \( X \) together with an equivalence class \( [\mathcal{A}] \) of compatible smooth atlases on \( X \).
+
   The equivalence class \( [\mathcal{A}] \) of compatible smooth atlases is called a \textbf{smooth structure} on \( X \).
 
 \end{definition}
@@ -242,8 +246,8 @@ We follow Segal \cite[Sections 2--5]{segal} for smooth structures and differenti
   \[
     \psi \circ H \circ \varphi^{-1} : \varphi(U) \longrightarrow \psi(V)
   \]
-  is smooth at \( \varphi(x) \). 
-  
+  is smooth at \( \varphi(x) \).
+
   The function \( H \) is \textbf{smooth} if it is smooth at every point \( x \in X \).
 \end{definition}
 
@@ -253,7 +257,7 @@ We follow Segal \cite[Sections 2--5]{segal} for smooth structures and differenti
 \end{definition}
 
 \begin{definition}\label{def:pseudo-chart}
-  Let \(X\) be a set. 
+  Let \(X\) be a set.
   A \textbf{pseudo-chart} on \(X\) is the pair \((U,\varphi)\), where \(U \subset X\) and
   \[
     \varphi : U \longrightarrow \varphi{(U)}
@@ -275,7 +279,7 @@ We follow Segal \cite[Sections 2--5]{segal} for smooth structures and differenti
     \[
       \phi_{21} = \varphi_2 \circ \varphi_1^{-1} : \varphi_1(U_1 \cap U_2) \longrightarrow \varphi_2(U_1 \cap U_2)
     \]
-    is continuous. 
+    is continuous.
   \end{enumerate}
   Then there exists a unique topology on \( X \) such that each pseudo-chart \( (U_i, \varphi_i) \) is a co-ordinate chart on \( X \).
 \end{proposition}
@@ -354,7 +358,7 @@ For smooth maps \( F : X \longrightarrow Y \) and \( G : Y \longrightarrow Z \),
   \]
 \end{theorem}
 
-To define gradients on these manifolds, we equip their tangent spaces with inner products. For the following metric and gradient definitions, we follow \cite[Definitions 3.51--3.55, 3.58 and 3.60]{boumal}.
+To define gradients on these manifolds, we equip their tangent spaces with inner products. For the following metric and gradient definitions, we follow \cite[Definitions 3.51--3.53, Proposition 3.54, and Definitions 3.55, 3.58 and 3.60]{boumal}.
 
 \begin{definition}\label{def:riemannian-manifold}
   Let \( \mathcal{M} \) be a smooth manifold. A \textbf{Riemannian metric} on \( \mathcal{M} \) assigns an inner product \( \langle \cdot, \cdot \rangle_x \) to each tangent space \( T_x\mathcal{M} \), varying smoothly with \( x \).
@@ -422,10 +426,11 @@ Retractions allow us to use this direction to move on the manifold.
   \[
     R : T\mathcal{M} \rightarrow \mathcal{M} : (x, v) \mapsto R_x(v)
   \]
-  such that, for every \( x \in \mathcal{M} \) and \( v \in T_x\mathcal{M} \), the curve \( c(t) = R_x(tv) \) satisfies \( c(0) = x \) and represents \( v \). 
-  
+  such that, for every \( x \in \mathcal{M} \) and \( v \in T_x\mathcal{M} \), the curve \( c(t) = R_x(tv) \) satisfies \( c(0) = x \) and represents \( v \).
+
   For an embedded submanifold \( \mathcal{M} \subset \mathcal{E} \), we regard \( R \) as a map into \( \mathcal{E} \).
-  It is smooth if and only if it extends to a smooth map on an open neighbourhood of \( T\mathcal{M} \) in \( \mathcal{E} \times \mathcal{E} \).
+  Under the ambient velocity identification, \( T\mathcal{M} \) is an embedded submanifold of \( \mathcal{E}\times\mathcal{E} \) with its natural tangent-bundle structure.
+  In particular, an ambient smooth extension of \( (x,v)\mapsto R_x(v) \) suffices to establish smoothness of \( R \).
 
 \end{definition}
 
@@ -561,7 +566,7 @@ We now apply the preceding results to the constraint \( X^\top X=I_k \), derivin
   The \textbf{Stiefel manifold} \( \St \) is the set of matrices in \( \R^{n \times k} \) with orthonormal columns in \( \R^n \) with respect to the standard Euclidean inner product,
   \[
     \St = \{ X \in \R^{n \times k} : X^\top X = I_k \},
-  \] 
+  \]
   where \( I_k \) denotes the identity matrix of size \( k \).
   We call matrices in \( \St \) \textbf{orthonormal matrices} and we reserve the term \textbf{orthogonal matrices} for square orthonormal matrices.
 \end{definition}
@@ -576,7 +581,7 @@ We now apply the preceding results to the constraint \( X^\top X=I_k \), derivin
 \begin{proof}
   Following~\cite[Section 7.3]{boumal}, consider the smooth map
   \[
-    h : \R^{n \times k} \longrightarrow \Sym(k), \qquad h(X) = X^\top X - I_k
+    h : \R^{n \times k} \longrightarrow \Sym(k), \qquad h(X) = X^\top X - I_k.
   \]
   Then \( \St = h^{-1}(0) \).
   For \( X,V \in \R^{n \times k} \),
@@ -595,8 +600,7 @@ We now apply the preceding results to the constraint \( X^\top X=I_k \), derivin
   since \( X^\top X = I_k \) and \( S^\top = S \).
   Hence \( Dh(X) \) is surjective for every \( X \in h^{-1}(0) \).
 
-  The set \( \St \) is nonempty, since the first \( k \)
-  columns of \( I_n \) form an element of \( \St \).
+  The set \( \St \) is nonempty, since the first \( k \) columns of \( I_n \) form an element of \( \St \).
   By \cref{thm:regular-value}, \( \St \) is an embedded submanifold of \( \R^{n \times k} \), with
   \[
     \dim \St = \dim \R^{n \times k} - \dim \Sym(k) = nk - \frac{k(k+1)}{2}.
@@ -613,7 +617,7 @@ We now apply the preceding results to the constraint \( X^\top X=I_k \), derivin
   \[
     \|X\|_F^2 = \tr(X^\top X) = \tr(I_k) = k,
   \]
-  so \( \St \) is bounded. By the Heine-Borel theorem, \( \St \) is compact. Since it is nonempty, the extreme value theorem gives the stated conclusion.
+  so \( \St \) is bounded. By the Heine--Borel theorem, \( \St \) is compact. Since it is nonempty, the extreme value theorem gives the stated conclusion.
 \end{proof}
 
 \begin{proposition}\label{prop:stiefel-tangent-normal}
@@ -621,8 +625,7 @@ We now apply the preceding results to the constraint \( X^\top X=I_k \), derivin
   \[
     T_X\St = \{V \in \R^{n \times k} : X^\top V + V^\top X = 0\}.
   \]
-  The \textbf{normal space} is the orthogonal complement of \( T_X\St \)
-  with respect to the Frobenius inner product, and is given by
+  The \textbf{normal space} is the orthogonal complement of \( T_X\St \) with respect to the Frobenius inner product, and is given by
   \[
     N_X\St := (T_X\St)^\perp = \{XS : S \in \Sym(k)\}.
   \]
@@ -640,7 +643,7 @@ We now apply the preceding results to the constraint \( X^\top X=I_k \), derivin
   \]
 
   Let \( S \in \Sym(k) \) and \( V \in T_X\St \).
-  The tangent-space equation implies that \( X^\top V \) is skew-symmetric. 
+  The tangent-space equation implies that \( X^\top V \) is skew-symmetric.
   Since symmetric and skew-symmetric matrices are orthogonal under the Frobenius inner product,
   \[
     \langle XS,V\rangle = \tr(S^\top X^\top V) = 0.
@@ -685,7 +688,7 @@ We now apply the preceding results to the constraint \( X^\top X=I_k \), derivin
 \end{proof}
 
 \begin{corollary}[Riemannian gradient]\label{cor:stiefel-gradient}
-  Let \( f : \St \longrightarrow \R \) be smooth, and let \( \bar{f} \) be a smooth extension to an open neighbourhood of \( \St \) in \( \R^{n \times k} \). 
+  Let \( f : \St \longrightarrow \R \) be smooth, and let \( \bar{f} \) be a smooth extension to an open neighbourhood of \( \St \) in \( \R^{n \times k} \).
   With the induced Frobenius metric,
   \[
     \grad f(X) = \nabla\bar{f}(X) - X\sym\bigl(X^\top\nabla\bar{f}(X)\bigr),
@@ -729,12 +732,12 @@ To construct a retraction, we first establish smoothness of the matrix inverse s
 \end{lemma}
 
 \begin{proof}
-  
+
   By the spectral theorem, write
   \[
     A = Q\diag(\lambda_1,\dots,\lambda_k)Q^\top, \qquad \lambda_i > 0,
   \]
-  where \( Q \) is orthogonal. 
+  where \( Q \) is orthogonal.
   Then
   \[
     S = Q \diag( \sqrt{ \lambda_1 }, \dots, \sqrt{ \lambda_k }) Q^\top
@@ -742,6 +745,8 @@ To construct a retraction, we first establish smoothness of the matrix inverse s
   is positive-definite and satisfies \( S^2 = A \).
 
   Uniqueness follows from the spectral theorem: any positive-definite symmetric square root commutes with \( A \) and acts as \( \sqrt{\lambda}I \) on each eigenspace of \( A \) with eigenvalue \( \lambda \).
+
+  The positive-definite matrices form an open subset of \( \Sym(k) \): if \( u^\top Au\ge m\|u\|^2 \) for some \( m>0 \), every symmetric perturbation \( E \) with \( \|E\|_F<m \) leaves \( A+E \) positive-definite.
 
   Consider the smooth map
   \[
@@ -815,21 +820,17 @@ To construct a retraction, we first establish smoothness of the matrix inverse s
 
 \section{The Grassmann Manifold}\label{sec:grassmann}
 
-% Construct the manifold through charts, following Segal Example 2.31 with column conventions.
-% Use the projector map to establish Hausdorffness before invoking the smooth-structure corollary.
 
-We now consider the subspaces spanned by matrices, independently of the chosen basis. 
+We now consider the subspaces spanned by matrices, independently of the chosen basis.
 We follow~\cite[Example 2.31]{segal}, representing bases by columns.
 
 \begin{definition}[Grassmann manifold as a set]\label{def:grassmann}
-  % Define Gr(k,n) as the set of k-dimensional subspaces; represent S by col(Y) for full-rank Y.
   Fix integers \( 1 \le k \le n \). The \textbf{Grassmannian} \( \Gr \) is the set of \( k \)-dimensional subspaces of \( \R^n \).
 
   Every \( S \in \Gr \) can be represented as \( S = \col(Y) \), where \( Y \in \R^{n \times k} \) has rank \( k \) and \( \col(Y) \) denotes its column space.
 \end{definition}
 
 \begin{lemma}[Change of basis]\label{lem:grassmann-change-basis}
-  % State col(Y)=col(Y') if and only if Y'=YG for some G in GL_k.
   Let \( Y,Y' \in \R^{n \times k} \) have rank \( k \).
   Then
   \[
@@ -839,7 +840,6 @@ We follow~\cite[Example 2.31]{segal}, representing bases by columns.
 \end{lemma}
 
 \begin{proof}
-  % Express the columns of either basis in the other.
   Suppose \( \col(Y) = \col(Y') \). Each column of \( Y' \) is a linear combination of the columns of \( Y \), so \( Y'=YG \) for some \( G \in \R^{k \times k} \).
   If \( Gv=0 \), then \( Y'v=YGv=0 \). Since \( Y' \) has rank \( k \), this implies \( v=0 \).
   Thus \( G \) is invertible.
@@ -848,20 +848,19 @@ We follow~\cite[Example 2.31]{segal}, representing bases by columns.
   Since \( Y=Y'G^{-1} \), the reverse inclusion also holds.
 \end{proof}
 
+The charts normalise an invertible row minor to the identity.
+For \( I=\{1,\dots,k\} \), the normalised matrix is \( \binom{I_k}{B} \), whose column space is the graph of \( u\mapsto Bu \).
+
 \begin{definition}[Grassmann pseudo-charts]\label{def:grassmann-charts}
-  % Define row index sets I, the row minor Y_I, and U_I.
-  % Explain basis independence using \cref{lem:grassmann-change-basis}.
-  % Define phi_I using the rows I^c of Y Y_I^(-1).
   Let \( I \subseteq \{1,\dots,n\} \) have \( k \) elements, and let \( I^c \) denote its complement.
-  For \( Y \in \R^{n \times k} \), write \( Y_I \) for the submatrix formed by the rows indexed by \( I \), in increasing order. 
+  For \( Y \in \R^{n \times k} \), write \( Y_I \) for the submatrix formed by the rows indexed by \( I \), in increasing order.
   Define
   \[
     U_I = \{S \in \Gr : Y_I \text{ is invertible
     for a basis matrix } Y \text{ of } S\}.
   \]
   This condition is independent of the choice of basis:
-  by \cref{lem:grassmann-change-basis}, another basis matrix
-  has the form \( Y'=YG \), with \( G \in \GL_k(\R) \), and
+  by \cref{lem:grassmann-change-basis}, another basis matrix has the form \( Y'=YG \), with \( G \in \GL_k(\R) \), and
   \[
     Y'_I = Y_I G.
   \]
@@ -879,18 +878,16 @@ We follow~\cite[Example 2.31]{segal}, representing bases by columns.
 \end{definition}
 
 \begin{lemma}[Chart inverses and covering]\label{lem:grassmann-chart-cover}
-  % State bijectivity onto R^((n-k)-by-k) and that the U_I cover.
   Each map
   \[
     \varphi_I : U_I \longrightarrow \R^{(n-k)\times k}
   \]
   is a bijection, and the sets \( U_I \) cover \( \Gr \).
   Hence these maps form a pseudo-atlas on \( \Gr \), identifying \( \R^{(n-k)\times k} \) with \( \R^{k(n-k)} \).
+  When \( k=n \), this coordinate space consists of a single point.
 \end{lemma}
 
 \begin{proof}
-  % Construct Y_B with identity rows in I and B in I^c.
-  % Use a nonzero k-by-k minor for coverage.
   For \( B \in \R^{(n-k)\times k} \), let \( Y_B \in \R^{n\times k} \) be the matrix whose rows indexed by \( I \) form \( I_k \), and whose remaining rows form \( B \), in the specified order.
   Since \( (Y_B)_I=I_k \), the matrix \( Y_B \) has rank \( k \), and \( \col(Y_B) \in U_I \).
   Moreover,
@@ -910,7 +907,7 @@ We follow~\cite[Example 2.31]{segal}, representing bases by columns.
 \end{proof}
 
 \begin{lemma}[Smooth transitions]\label{lem:grassmann-transitions}
-  Let \( I,J \subseteq \{1,\dots,n\} \) each have \( k \) elements. 
+  Let \( I,J \subseteq \{1,\dots,n\} \) each have \( k \) elements.
   For \( B \in \R^{(n-k)\times k} \), let \( Y_B \) denote the basis matrix associated with the chart indexed by \( I \), so that
   \[
     (Y_B)_I = I_k, \qquad (Y_B)_{I^c} = B.
@@ -919,7 +916,7 @@ We follow~\cite[Example 2.31]{segal}, representing bases by columns.
   \[
     \varphi_I(U_I \cap U_J) = \{B \in \R^{(n-k)\times k} : \det((Y_B)_J) \ne 0\}
   \]
-  is open. 
+  is open.
   On this set, the transition function is
   \[
     (\varphi_J \circ \varphi_I^{-1})(B) = \bigl(Y_B((Y_B)_J)^{-1}\bigr)_{J^c},
@@ -1161,8 +1158,6 @@ We relate these manifolds by forgetting the choice of basis.
 Each orbit \( \{XQ:Q\in\Orth(k)\} \) consists of all orthonormal bases of one subspace.
 Thus passing from the Stiefel manifold to the Grassmannian forgets the choice of orthonormal basis.
 
-% Close this section by explaining that an O(k)-orbit consists of all orthonormal bases of one subspace.
-% The quotient identification is the central conclusion of the paper's geometric construction.
 
 \section{Applications}\label{sec:example}
 
