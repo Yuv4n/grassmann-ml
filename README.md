@@ -12,4 +12,4 @@ To rebuild: `cd paper && latexmk -pdf main.tex` (needs a TeX distribution).
 
 ## Next
 
-A NumPy project on orthogonal RNNs using a Cayley retraction and backpropagation through time, comparing hard orthogonality constraints with soft penalties across seeds. This repository currently contains the paper only: no ML implementation or experiments.
+The paper proves the polar-retraction construction; the Cayley method and experiments are subsequent work: a NumPy project on orthogonal RNNs using a Cayley retraction and backpropagation through time, comparing hard orthogonality constraints with soft penalties across seeds. This repository currently contains the paper only: no ML implementation or experiments.
