@@ -1,24 +1,15 @@
 # Stiefel and Grassmann manifolds
 
-An expository mathematics paper on orthonormal frames and subspaces, supervised by Dr Ed Segal at UCL. The paper develops the geometry of Stiefel and Grassmann manifolds and establishes their relationship through the column-space map.
+An expository mathematics paper on orthonormal frames and subspaces, supervised by Dr Ed Segal at UCL, with the groundwork for an orthogonal recurrent neural network.
 
-The complete manuscript includes proofs of the manifold constructions and the quotient identification `St(n,k)/O(k) ≅ Gr(k,n)`. It also derives the Stiefel tangent projection and Riemannian gradient under the Frobenius metric, and verifies a polar retraction. The exposition follows Segal’s notes, supplemented by Boumal’s treatment of Riemannian optimisation.
+- **Content:** proofs of the manifold constructions and the quotient `St(n,k)/O(k) ≅ Gr(k,n)`; the Stiefel tangent projection and Riemannian gradient under the Frobenius metric; a verified polar retraction.
+- **Sources:** follows Segal's notes and Boumal's treatment of Riemannian optimisation.
+- **Talk:** presented at the UCL Undergraduate Mathematics Colloquium on 28 October 2026.
 
-The paper supported a presentation at the UCL Undergraduate Mathematics Colloquium on 28 October 2026 and provides a mathematical foundation for a planned NumPy project on orthogonal recurrent neural networks. That project will use a Cayley retraction and backpropagation through time, and compare hard orthogonality constraints with soft penalties across multiple random seeds. The paper proves the polar-retraction construction; the Cayley method and experiments are subsequent work. This repository currently contains the paper, with no ML implementation or numerical experiments.
+**Read:** [paper (PDF)](paper/main.pdf) · [LaTeX source](paper/main.tex) · [bibliography](paper/refs.bib)
 
-## Paper
+To rebuild: `cd paper && latexmk -pdf main.tex` (needs a TeX distribution).
 
-- [Compiled PDF](paper/main.pdf)
-- [LaTeX source](paper/main.tex)
-- [Bibliography](paper/refs.bib)
+## Next
 
-## Build
-
-Requires a TeX distribution with the packages listed in `paper/main.tex`, plus BibTeX and `latexmk`. From the repository root:
-
-```sh
-cd paper
-latexmk -pdf main.tex
-```
-
-This regenerates `paper/main.pdf`.
+A NumPy project on orthogonal RNNs using a Cayley retraction and backpropagation through time, comparing hard orthogonality constraints with soft penalties across seeds. This repository currently contains the paper only: no ML implementation or experiments.
