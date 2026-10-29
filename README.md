@@ -1,6 +1,6 @@
 # Stiefel and Grassmann manifolds
 
-An expository mathematics paper on orthonormal frames and subspaces, supervised by Professor Ed Segal at UCL. The paper develops the geometry of Stiefel and Grassmann manifolds and establishes their relationship through the column-space map.
+An expository mathematics paper on orthonormal frames and subspaces, supervised by Dr Ed Segal at UCL. The paper develops the geometry of Stiefel and Grassmann manifolds and establishes their relationship through the column-space map.
 
 The complete manuscript includes proofs of the manifold constructions and the quotient identification `St(n,k)/O(k) ≅ Gr(k,n)`. It also derives the Stiefel tangent projection and Riemannian gradient under the Frobenius metric, and verifies a polar retraction. The exposition follows Segal’s notes, supplemented by Boumal’s treatment of Riemannian optimisation.
 
