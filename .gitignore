@@ -17,6 +17,7 @@
 *.fdb_latexmk
 *.synctex.gz
 *.pdf
+!paper/main.pdf
 
 # Python
 __pycache__/

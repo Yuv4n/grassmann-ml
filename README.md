@@ -4,10 +4,11 @@ An expository mathematics paper on orthonormal frames and subspaces, supervised 
 
 The complete manuscript includes proofs of the manifold constructions and the quotient identification `St(n,k)/O(k) ≅ Gr(k,n)`. It also derives the Stiefel tangent projection and Riemannian gradient under the Frobenius metric, and verifies a polar retraction. The exposition follows Segal’s notes, supplemented by Boumal’s treatment of Riemannian optimisation.
 
-The paper supports a presentation at the UCL Undergraduate Mathematics Colloquium on 28 October 2026 and provides a mathematical foundation for a planned NumPy project on orthogonal recurrent neural networks. That project will use a Cayley retraction and backpropagation through time, and compare hard orthogonality constraints with soft penalties across multiple random seeds. The paper proves the polar-retraction construction; the Cayley method and experiments are subsequent work. This repository currently contains the paper, with no ML implementation or numerical experiments.
+The paper supported a presentation at the UCL Undergraduate Mathematics Colloquium on 28 October 2026 and provides a mathematical foundation for a planned NumPy project on orthogonal recurrent neural networks. That project will use a Cayley retraction and backpropagation through time, and compare hard orthogonality constraints with soft penalties across multiple random seeds. The paper proves the polar-retraction construction; the Cayley method and experiments are subsequent work. This repository currently contains the paper, with no ML implementation or numerical experiments.
 
 ## Paper
 
+- [Compiled PDF](paper/main.pdf)
 - [LaTeX source](paper/main.tex)
 - [Bibliography](paper/refs.bib)
 
@@ -20,4 +21,4 @@ cd paper
 latexmk -pdf main.tex
 ```
 
-This produces `paper/main.pdf` locally.
+This regenerates `paper/main.pdf`.
